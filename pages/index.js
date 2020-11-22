@@ -1,17 +1,22 @@
 import Head from 'next/head'
 import styles from '../styles/Home.module.css'
+import axios from 'axios';
 
 export async function getStaticProps() {
-  const res = await fetch('https://api.tracker.gg/api/v2/valorant/rap-matches/riot/Broker%236969?type=competitive&next=null', {
+  const res = await axios.get('https://api.tracker.gg/api/v2/valorant/rap-matches/riot/Broker%236969?type=competitive&next=null', {
     headers: {
-      "TRN-Api-Key": "203c55ac-fb74-4fde-a3ce-20cd70661d4a"
-    }
+      'TRN-Api-Key': '203c55ac-fb74-4fde-a3ce-20cd70661d4a',
+      'Accept': 'application/json'
+    },
+
   })
-  const results = await res.json()
+  console.log(res.data)
+
+  const data = res.data.data
 
   return {
     props: {
-      results,
+      data,
     },
     // Next.js will attempt to re-generate the page:
     // - When a request comes in
@@ -21,16 +26,17 @@ export async function getStaticProps() {
 }
 
 export default function Home(props) {
+  console.log(props)
   return (
     <div className={styles.container}>
       <Head>
-        <title>Valorant Tracker for: {props.matches[0].segments[0].metadata.platformUserHandle}</title>
+        <title>Valorant Tracker for: {props.data.matches[0].segments[0].metadata.platformUserHandle}</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
       <main className={styles.main}>
         <h1 className={styles.title}>
-          Welcome to {props.matches[0].segments[0].metadata.platformUserHandle}
+          Welcome to {props.data.matches[0].segments[0].metadata.platformUserHandle}
         </h1>
 
         <p className={styles.description}>
