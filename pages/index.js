@@ -20,14 +20,6 @@ export async function getStaticProps() {
   }
 }
 
-export async function getStaticPaths() {
-  return {
-    paths: [
-    ],
-    fallback: true // See the "fallback" section below
-  };
-}
-
 export default function Home(props) {
   return (
     <div className={styles.container}>
