@@ -1,17 +1,44 @@
 import Head from 'next/head'
 import styles from '../styles/Home.module.css'
 
-export default function Home() {
+export async function getStaticProps() {
+  const res = await fetch('https://api.tracker.gg/api/v2/valorant/rap-matches/riot/Broker%236969?type=competitive&next=null', {
+    headers: {
+      "TRN-Api-Key": "203c55ac-fb74-4fde-a3ce-20cd70661d4a"
+    }
+  })
+  const results = await res.json()
+
+  return {
+    props: {
+      results,
+    },
+    // Next.js will attempt to re-generate the page:
+    // - When a request comes in
+    // - At most once every second
+    revalidate: 100, // In seconds
+  }
+}
+
+export async function getStaticPaths() {
+  return {
+    paths: [
+    ],
+    fallback: true // See the "fallback" section below
+  };
+}
+
+export default function Home(props) {
   return (
     <div className={styles.container}>
       <Head>
-        <title>Create Next App</title>
+        <title>Valorant Tracker for: {props.matches[0].segments[0].metadata.platformUserHandle}</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
       <main className={styles.main}>
         <h1 className={styles.title}>
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
+          Welcome to {props.matches[0].segments[0].metadata.platformUserHandle}
         </h1>
 
         <p className={styles.description}>
