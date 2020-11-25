@@ -14,7 +14,8 @@ function getKda(info, dateOffset) {
 }
 
 function getAvg(info) {
-  const matches = info.matches;
+  const matches = info.matches.filter(m => m.metadata.modeName == "Competitive");
+  const name = info.requestingPlayerAttributes.platformUserIdentifier;
   
   const sumKda = matches.reduce((current, match) => match.segments[0].stats.kdRatio.value + current, 0);
   const avgKda = sumKda / matches.length
@@ -22,13 +23,15 @@ function getAvg(info) {
   const sumScore = matches.reduce((current, match) => match.segments[0].stats.score.value + current, 0);
   const avgScore = sumScore / matches.length;
 
-   const econRating = matches.reduce((current, match) => match.segments[0].stats.econRating.value + current, 0);
+  const econRating = matches.reduce((current, match) => match.segments[0].stats.econRating.value + current, 0);
   const avgEconRating = econRating / matches.length;
+ 
+  const sumScorePerRound = matches.reduce((current, match) => match.segments[0].stats.scorePerRound.value + current, 0);
+  const avgScorePerRound = sumScorePerRound / matches.length;
 
-  const name = info.requestingPlayerAttributes.platformUserIdentifier;
   const nmatches = matches.length;
 
-  return {name, avgKda, avgScore, avgEconRating, nmatches};
+  return {name, avgKda, avgScore, avgEconRating, avgScorePerRound, nmatches};
 }
 
 function random_rgba() {
@@ -41,7 +44,6 @@ function composePlayerKdaDataSet(info) {
   let r = randomBetween(0,255)
   let g = randomBetween(0,255)
   let b = randomBetween(0,255)
-  console.log(info)
   return (
   {
     label: info.requestingPlayerAttributes.platformUserIdentifier,
@@ -78,7 +80,6 @@ function composeKdaGraph(players) {
 
 async function getPlayerData(player) {
   let path = `https://api.tracker.gg/api/v2/valorant/rap-matches/riot/${player}?type=competitive&next=null`
-  console.log(path)
   const res = await axios.get(path, {
     headers: {
       'TRN-Api-Key': '203c55ac-fb74-4fde-a3ce-20cd70661d4a',
@@ -86,7 +87,6 @@ async function getPlayerData(player) {
     },
 
   })
-  console.log(res)
   return res.data.data
 }
 
@@ -114,8 +114,6 @@ export async function getStaticProps() {
 }
 
 export default function Home(props) {
-  console.log(props)
-
   const TableRow = ({row}) => (
     <tr>
       <td>{row.name}</td>
@@ -155,6 +153,14 @@ export default function Home(props) {
     }]  
   };
 
+  const dataScorePerRound = {
+    labels: props.avgData.map(m => m.name),
+    datasets: [{
+      label: "SCORE PER ROUND",
+      data: props.avgData.map(m => m.avgScorePerRound)
+    }]  
+  };
+
   const dataMatches = {
     labels: props.avgData.map(m => m.name),
     datasets: [{
@@ -182,6 +188,8 @@ export default function Home(props) {
         />
 
         <Bar data={dataScore} />
+
+        <Bar data={dataScorePerRound} />
 
         <Bar data={dataEcon} />
 
