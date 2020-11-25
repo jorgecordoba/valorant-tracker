@@ -2,6 +2,7 @@ import Head from 'next/head'
 import styles from '../styles/Home.module.css'
 import axios from 'axios';
 import {Line} from 'react-chartjs-2';
+import {Bar} from 'react-chartjs-2';
 import { execOnce } from 'next/dist/next-server/lib/utils';
 
 function getKda(info, dateOffset) {
@@ -130,6 +131,38 @@ export default function Home(props) {
     </table>
   );
 
+  const dataScore = {
+    labels: props.avgData.map(m => m.name),
+    datasets: [{
+      label: "AVG SCORE",
+      data: props.avgData.map(m => m.avgScore)
+    }]  
+  };
+
+  const dataEcon = {
+    labels: props.avgData.map(m => m.name),
+    datasets: [{
+      label: "ECON RATING",
+      data: props.avgData.map(m => m.avgEconRating)
+    }]  
+  };
+
+  const dataKda = {
+    labels: props.avgData.map(m => m.name),
+    datasets: [{
+      label: "KDA",
+      data: props.avgData.map(m => m.avgKda)
+    }]  
+  };
+
+  const dataMatches = {
+    labels: props.avgData.map(m => m.name),
+    datasets: [{
+      label: "MATCHES",
+      data: props.avgData.map(m => m.nmatches)
+    }]  
+  };
+
   return (
     <div className={styles.container}>
       <Head>
@@ -146,8 +179,15 @@ export default function Home(props) {
           data={props.kda}
           width={200}
           height={200}
-          options={{ maintainAspectRatio: false }}
         />
+
+        <Bar data={dataScore} />
+
+        <Bar data={dataEcon} />
+
+        <Bar data={dataKda} />
+        
+        <Bar data={dataMatches} />
 
         <Table data={props.avgData} />
       </main>
