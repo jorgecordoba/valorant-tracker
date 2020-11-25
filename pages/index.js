@@ -7,7 +7,8 @@ import { execOnce } from 'next/dist/next-server/lib/utils';
 
 function getKda(info, dateOffset) {
   let date = new Date(new Date().setDate(new Date().getDate()+dateOffset)).toISOString().slice(0,10);
-  let matches = info.matches.filter(match => match.metadata.timestamp.slice(0,10) == date)
+  let matches = info.matches.filter(m => m.metadata.modeName == "Competitive");
+  matches = matches.filter(match => match.metadata.timestamp.slice(0,10) == date)
   const sumKda = matches.reduce((current, match) => match.segments[0].stats.kdRatio.value + current, 0);
   const avgKda = sumKda / matches.length
   return avgKda;
