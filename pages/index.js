@@ -2,14 +2,32 @@ import Head from 'next/head'
 import styles from '../styles/Home.module.css'
 import axios from 'axios';
 import {Line} from 'react-chartjs-2';
+import { execOnce } from 'next/dist/next-server/lib/utils';
 
 function getKda(info, dateOffset) {
   let date = new Date(new Date().setDate(new Date().getDate()+dateOffset)).toISOString().slice(0,10);
   let matches = info.matches.filter(match => match.metadata.timestamp.slice(0,10) == date)
-  
   const sumKda = matches.reduce((current, match) => match.segments[0].stats.kdRatio.value + current, 0);
   const avgKda = sumKda / matches.length
   return avgKda;
+}
+
+function getAvg(info) {
+  const matches = info.matches;
+  
+  const sumKda = matches.reduce((current, match) => match.segments[0].stats.kdRatio.value + current, 0);
+  const avgKda = sumKda / matches.length
+
+  const sumScore = matches.reduce((current, match) => match.segments[0].stats.score.value + current, 0);
+  const avgScore = sumScore / matches.length;
+
+   const econRating = matches.reduce((current, match) => match.segments[0].stats.econRating.value + current, 0);
+  const avgEconRating = econRating / matches.length;
+
+  const name = info.requestingPlayerAttributes.platformUserIdentifier;
+  const nmatches = matches.length;
+
+  return {name, avgKda, avgScore, avgEconRating, nmatches};
 }
 
 function random_rgba() {
@@ -72,17 +90,20 @@ async function getPlayerData(player) {
 }
 
 export async function getStaticProps() {
+  const players = [await getPlayerData('Broker%236969'), 
+  await getPlayerData('%CE%9E%CE%94%CE%9E%20Chaos%23Prime'),
+  await getPlayerData('Zehcnas%23666'),
+  await getPlayerData('Wallux%23wal'),
+  await getPlayerData('Iskes%235895')];
 
-  const kda = composeKdaGraph(
-    [await getPlayerData('Broker%236969'), 
-     await getPlayerData('%CE%9E%CE%94%CE%9E%20Chaos%23Prime'),
-     await getPlayerData('Zehcnas%23666'),
-     await getPlayerData('Wallux%23wal'),
-     await getPlayerData('Iskes%235895')])
+  const avgData = [getAvg(players[0]), getAvg(players[1]), getAvg(players[2]), getAvg(players[3]), getAvg(players[4])];
+
+  const kda = composeKdaGraph(players)
 
   return {
     props: {
       kda,
+      avgData
     },
     // Next.js will attempt to re-generate the page:
     // - When a request comes in
@@ -93,6 +114,22 @@ export async function getStaticProps() {
 
 export default function Home(props) {
   console.log(props)
+
+  const TableRow = ({row}) => (
+    <tr>
+      <td>{row.name}</td>
+      <td>{row.avgScore}</td>      
+    </tr>
+  );
+
+  const Table = ({data}) => (
+    <table>
+      {data.map(row => {
+        <TableRow row={row} />
+      })}
+    </table>
+  );
+
   return (
     <div className={styles.container}>
       <Head>
@@ -111,6 +148,8 @@ export default function Home(props) {
           height={200}
           options={{ maintainAspectRatio: false }}
         />
+
+        <Table data={props.avgData} />
       </main>
 
       <footer className={styles.footer}>
