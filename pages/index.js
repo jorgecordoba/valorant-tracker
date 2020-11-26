@@ -16,7 +16,17 @@ function getKda(profile, dateOffset) {
   return avgKda;
 }
 
+<<<<<<< HEAD
 function getAvg(profile) {
+=======
+function getAvg(info) {
+  const matches = info.matches.filter(m => m.metadata.modeName == "Competitive");
+  const name = parseName(info.requestingPlayerAttributes.platformUserIdentifier);
+  const profile = info.profile;
+  
+  const sumKda = matches.reduce((current, match) => match.segments[0].stats.kdRatio.value + current, 0);
+  const avgKda = sumKda / matches.length
+>>>>>>> 4c8adba082e55a05cc953677e558f061aa907900
 
   const name = profile.name;
   const rgb = profile.rgb;
@@ -41,7 +51,15 @@ function getAvg(profile) {
   return {name, rgb, avgKda, avgScore, avgEconRating, avgScorePerRound, nmatches};
 }
 
+<<<<<<< HEAD
 function randomRGB() {
+=======
+function parseName(name){
+  return name.substr(0, name.indexOf('#'))
+}
+
+function composePlayerDataSet(info, func) {
+>>>>>>> 4c8adba082e55a05cc953677e558f061aa907900
   const randomBetween = (min, max) => min + Math.floor(Math.random() * (max - min + 1));
   let r = randomBetween(0,255)
   let g = randomBetween(0,255)
@@ -53,7 +71,11 @@ function composePlayerDataSet(profile, func) {
 
   return (
   {
+<<<<<<< HEAD
     label: profile.name,
+=======
+    label: parseName(info.requestingPlayerAttributes.platformUserIdentifier),
+>>>>>>> 4c8adba082e55a05cc953677e558f061aa907900
     fill: false,
     lineTension: 0.1,
     backgroundColor: `rgba(${profile.rgb.r},${profile.rgb.g},${profile.rgb.b},0.4)`,
