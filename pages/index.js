@@ -149,23 +149,6 @@ export async function mergePlayerData(player1, player2) {
   return player1
 }
 
-function generateProfileColors(players) {
-
-  const randomBetween = (min, max) => min + Math.floor(Math.random() * (max - min + 1));
-
-  players.forEach(player => {
-    let profile = {
-      color: {
-        r: randomBetween(0,255),
-        g: randomBetween(0,255),
-        b: randomBetween(0,255),
-      }
-    }
-    player.profile = profile
-  });
-
-}
-
 export async function getStaticProps() {
 
   const broker = await getPlayerData('Broker%236969')
@@ -306,7 +289,7 @@ export default function Home(props) {
     labels: ['Econ Rating', 'KDA', 'Score', 'Score per Round'],
     datasets: [{
       label: p.name,
-      backgroundColor: `rgba(${p.profile.color.r},${p.profile.color.g},${p.profile.color.b},0.4)`,
+      backgroundColor: `rgba(${p.rgb.r},${p.rgb.g},${p.rgb.b},0.4)`,
       data: [p.avgEconRating * 100 / maxEcon, 
              p.avgKda * 100 / maxKda, 
              p.avgScore * 100 / maxScore,
