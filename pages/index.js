@@ -17,6 +17,7 @@ function getKda(info, dateOffset) {
 function getAvg(info) {
   const matches = info.matches.filter(m => m.metadata.modeName == "Competitive");
   const name = info.requestingPlayerAttributes.platformUserIdentifier;
+  const profile = info.profile;
   
   const sumKda = matches.reduce((current, match) => match.segments[0].stats.kdRatio.value + current, 0);
   const avgKda = sumKda / matches.length
@@ -32,7 +33,7 @@ function getAvg(info) {
 
   const nmatches = matches.length;  
 
-  return {name, avgKda, avgScore, avgEconRating, avgScorePerRound, nmatches};
+  return {name, profile, avgKda, avgScore, avgEconRating, avgScorePerRound, nmatches};
 }
 
 function random_rgba() {
@@ -219,7 +220,10 @@ export default function Home(props) {
     labels: props.avgData.map(m => m.name),
     datasets: [{
       label: "AVG SCORE",
-      data: props.avgData.map(m => m.avgScore)
+      data: props.avgData.map(m => m.avgScore),
+      backgroundColor: props.avgData.map(m =>`rgba(${m.profile.color.r},${m.profile.color.g},${m.profile.color.b},0.4)`),
+      borderColor: props.avgData.map(m =>`rgba(${m.profile.color.r},${m.profile.color.g},${m.profile.color.b},1)`),
+      borderWidth: 1,
     }]  
   };
 
@@ -227,7 +231,10 @@ export default function Home(props) {
     labels: props.avgData.map(m => m.name),
     datasets: [{
       label: "ECON RATING",
-      data: props.avgData.map(m => m.avgEconRating)
+      data: props.avgData.map(m => m.avgEconRating),
+      backgroundColor: props.avgData.map(m =>`rgba(${m.profile.color.r},${m.profile.color.g},${m.profile.color.b},0.4)`),
+      borderColor: props.avgData.map(m =>`rgba(${m.profile.color.r},${m.profile.color.g},${m.profile.color.b},1)`),
+      borderWidth: 1,
     }]  
   };
 
@@ -235,7 +242,10 @@ export default function Home(props) {
     labels: props.avgData.map(m => m.name),
     datasets: [{
       label: "KDA",
-      data: props.avgData.map(m => m.avgKda)
+      data: props.avgData.map(m => m.avgKda),
+      backgroundColor: props.avgData.map(m =>`rgba(${m.profile.color.r},${m.profile.color.g},${m.profile.color.b},0.4)`),
+      borderColor: props.avgData.map(m =>`rgba(${m.profile.color.r},${m.profile.color.g},${m.profile.color.b},1)`),
+      borderWidth: 1,
     }]  
   };
 
@@ -243,7 +253,10 @@ export default function Home(props) {
     labels: props.avgData.map(m => m.name),
     datasets: [{
       label: "SCORE PER ROUND",
-      data: props.avgData.map(m => m.avgScorePerRound)
+      data: props.avgData.map(m => m.avgScorePerRound),
+      backgroundColor: props.avgData.map(m =>`rgba(${m.profile.color.r},${m.profile.color.g},${m.profile.color.b},0.4)`),
+      borderColor: props.avgData.map(m =>`rgba(${m.profile.color.r},${m.profile.color.g},${m.profile.color.b},1)`),
+      borderWidth: 1,
     }]  
   };
 
@@ -251,7 +264,10 @@ export default function Home(props) {
     labels: props.avgData.map(m => m.name),
     datasets: [{
       label: "MATCHES",
-      data: props.avgData.map(m => m.nmatches)
+      data: props.avgData.map(m => m.nmatches),
+      backgroundColor: props.avgData.map(m =>`rgba(${m.profile.color.r},${m.profile.color.g},${m.profile.color.b},0.4)`),
+      borderColor: props.avgData.map(m =>`rgba(${m.profile.color.r},${m.profile.color.g},${m.profile.color.b},1)`),
+      borderWidth: 1,
     }]  
   };
 
