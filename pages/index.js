@@ -30,7 +30,7 @@ function getAvg(info) {
   const sumScorePerRound = matches.reduce((current, match) => match.segments[0].stats.scorePerRound.value + current, 0);
   const avgScorePerRound = sumScorePerRound / matches.length;
 
-  const nmatches = matches.length;
+  const nmatches = matches.length;  
 
   return {name, avgKda, avgScore, avgEconRating, avgScorePerRound, nmatches};
 }
@@ -40,7 +40,7 @@ function random_rgba() {
   return 'rgba(' + o(r()*s) + ',' + o(r()*s) + ',' + o(r()*s) + ',' + r().toFixed(1) + ')';
 }
 
-function composePlayerKdaDataSet(info) {
+function composePlayerDataSet(info, func) {
   const randomBetween = (min, max) => min + Math.floor(Math.random() * (max - min + 1));
   let r = randomBetween(0,255)
   let g = randomBetween(0,255)
@@ -65,18 +65,61 @@ function composePlayerKdaDataSet(info) {
     pointHoverBorderWidth: 2,
     pointRadius: 1,
     pointHitRadius: 10,
-    data: [getKda(info,-6), getKda(info,-5), getKda(info,-4), getKda(info,-3), getKda(info,-2), getKda(info,-1), getKda(info,0)]
+    spanGaps: true,
+    data: [func(info,-6), func(info,-5), func(info,-4), func(info,-3), func(info,-2), func(info,-1), func(info,0)]
   }
   )
+}
+
+function composePlayerAccuracy(info, dateOffset) {
+  let date = new Date(new Date().setDate(new Date().getDate()+dateOffset)).toISOString().slice(0,10);
+  let matches = info.matches.filter(m => m.metadata.modeName == "Competitive" && m.metadata.timestamp.slice(0,10) == date);
+
+  const headshots = matches.reduce((current, match) => match.segments[0].stats.dealtHeadshots.value + current, 0);
+  const bodyshots = matches.reduce((current, match) => match.segments[0].stats.dealtBodyshots.value + current, 0);
+  const legshots = matches.reduce((current, match) => match.segments[0].stats.dealtLegshots.value + current, 0);
+  const totalShots = headshots + bodyshots + legshots;
+  const pHeadshots = headshots * 100 / totalShots
+  const pBodyshots = bodyshots * 100 / totalShots
+  const pLegshots = legshots * 100 / totalShots  
+
+  return {pHeadshots, pBodyshots, pLegshots}
 }
 
 function composeKdaGraph(players) {
   const data = {
     labels: ['-6', '-5', '-4', '-3', '-2', '-1', 'Today'],
-    datasets: players.map( player => composePlayerKdaDataSet(player)
+    datasets: players.map( player => composePlayerDataSet(player, (p, o) => getKda(p,o))
     )
   };
   return data  
+}
+
+function composeHeadshotGraph(players) {
+  const data = {
+    labels: ['-6', '-5', '-4', '-3', '-2', '-1', 'Today'],
+    datasets: players.map( player => composePlayerDataSet(player, (p,o) => composePlayerAccuracy(p, o).pHeadshots)
+    )
+  };
+  return data 
+}
+
+function composeBodyshotGraph(players) {
+  const data = {
+    labels: ['-6', '-5', '-4', '-3', '-2', '-1', 'Today'],
+    datasets: players.map( player => composePlayerDataSet(player, (p,o) => composePlayerAccuracy(p, o).pBodyshots)
+    )
+  };
+  return data 
+}
+
+function composeLegshotGraph(players) {
+  const data = {
+    labels: ['-6', '-5', '-4', '-3', '-2', '-1', 'Today'],
+    datasets: players.map( player => composePlayerDataSet(player, (p,o) => composePlayerAccuracy(p, o).pLegshots)
+    )
+  };
+  return data 
 }
 
 async function getPlayerData(player) {
@@ -91,8 +134,19 @@ async function getPlayerData(player) {
   return res.data.data
 }
 
+export async function mergePlayerData(player1, player2) {
+  if (player1 && player2 && player1.matches && player2.matches) {
+    player1.matches = new Map([...player1.matches, ...player2.matches])
+  }
+
+  console.log(player1.matches)
+  return player1
+}
+
 export async function getStaticProps() {
-  const players = [await getPlayerData('Broker%236969'), 
+  const broker = await getPlayerData('Broker%236969')
+  const ikerik = await getPlayerData('Ikeric%235421')
+  const players = [await mergePlayerData(broker, ikerik), 
   await getPlayerData('%CE%9E%CE%94%CE%9E%20Chaos%23Prime'),
   await getPlayerData('Zehcnas%23666'),
   await getPlayerData('Wallux%23wal'),
@@ -101,10 +155,16 @@ export async function getStaticProps() {
   const avgData = [getAvg(players[0]), getAvg(players[1]), getAvg(players[2]), getAvg(players[3]), getAvg(players[4])];
 
   const kda = composeKdaGraph(players)
+  const headshots = composeHeadshotGraph(players)
+  const bodyshots = composeBodyshotGraph(players)
+  const legshots = composeLegshotGraph(players)
 
   return {
     props: {
       kda,
+      headshots,
+      bodyshots,
+      legshots,
       avgData
     },
     // Next.js will attempt to re-generate the page:
@@ -182,23 +242,83 @@ export default function Home(props) {
           Welcome to Valorant Tracker
         </h1>
 
+      <div className={styles.grid}>
+        <div style={{width: '500px', height: '500px'}}>
         <Line
           data={props.kda}
-          width={200}
-          height={200}
+          height={null}
+          width={null}          
+          options= {{title: {
+                      display: true,
+                      text: 'KDA Ratio'
+           }, maintainAspectRatio: false}}
         />
+        </div>
 
-        <Bar data={dataScore} />
+        <div style={{width: '500px', height: '500px'}}>
+        <Line
+          data={props.headshots}
+          height={null}
+          width={null}          
+          options= {{title: {
+                      display: true,
+                      text: '% Headshots'
+           }, maintainAspectRatio: false}}
+        />
+        </div>
 
-        <Bar data={dataScorePerRound} />
+        <div style={{width: '500px', height: '500px'}}>
+        <Line
+          data={props.bodyshots}
+          height={null}
+          width={null}          
+          options= {{title: {
+                      display: true,
+                      text: '% Bodyshots'
+           }, maintainAspectRatio: false}}
+        />
+        </div>
 
-        <Bar data={dataEcon} />
+        <div style={{width: '500px', height: '500px'}}>
+        <Line
+          data={props.legshots}
+          height={null}
+          width={null}          
+          options= {{title: {
+                      display: true,
+                      text: '% Podología'
+           }, maintainAspectRatio: false}}
+        />
+        </div>
 
-        <Bar data={dataKda} />
+        <div style={{width: '500px', height: '400px'}}>
+        <Bar data={dataScore}  
+          height={null}
+          width={null}          
+          options= {{maintainAspectRatio: false}} />
+        </div>
+
+        <div style={{width: '500px', height: '500px'}}>
+        <Bar data={dataScorePerRound}
+             height={null}
+             width={null}          
+             options= {{maintainAspectRatio: false}} />
+        </div>
+
+        <div style={{width: '500px', height: '500px'}}>
+        <Bar data={dataEcon} 
+             height={null}
+             width={null}          
+             options= {{maintainAspectRatio: false}}/>
+        </div>
         
-        <Bar data={dataMatches} />
-
-        <Table data={props.avgData} />
+        <div style={{width: '500px', height: '500px'}}>
+        <Bar data={dataKda} 
+             height={null}
+             width={null}          
+             options= {{maintainAspectRatio: false}}/>
+        </div>
+        </div>
       </main>
 
       <footer className={styles.footer}>
