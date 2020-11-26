@@ -45,6 +45,11 @@ function composePlayerDataSet(info, func) {
   let r = randomBetween(0,255)
   let g = randomBetween(0,255)
   let b = randomBetween(0,255)
+
+  r = info.profile.color.r
+  g = info.profile.color.g
+  b = info.profile.color.b
+
   return (
   {
     label: info.requestingPlayerAttributes.platformUserIdentifier,
@@ -143,7 +148,25 @@ export async function mergePlayerData(player1, player2) {
   return player1
 }
 
+function generateProfileColors(players) {
+
+  const randomBetween = (min, max) => min + Math.floor(Math.random() * (max - min + 1));
+
+  players.forEach(player => {
+    let profile = {
+      color: {
+        r: randomBetween(0,255),
+        g: randomBetween(0,255),
+        b: randomBetween(0,255),
+      }
+    }
+    player.profile = profile
+  });
+
+}
+
 export async function getStaticProps() {
+
   const broker = await getPlayerData('Broker%236969')
   const ikerik = await getPlayerData('Ikeric%235421')
   const players = [await mergePlayerData(broker, ikerik), 
@@ -151,6 +174,8 @@ export async function getStaticProps() {
   await getPlayerData('Zehcnas%23666'),
   await getPlayerData('Wallux%23wal'),
   await getPlayerData('Iskes%235895')];
+
+  generateProfileColors(players);
 
   const avgData = [getAvg(players[0]), getAvg(players[1]), getAvg(players[2]), getAvg(players[3]), getAvg(players[4])];
 
