@@ -313,7 +313,7 @@ export default function Home(props) {
         </h1>
 
       <div className={styles.grid}>
-        <div style={{width: '25vw', height: '400px', margin: '8%'}}>
+        <div style={{width: '30vw', height: '400px', margin: '2%'}}>
         <Line
           data={props.kda}
           height={null}
@@ -325,7 +325,7 @@ export default function Home(props) {
         />
         </div>
 
-        <div style={{width: '25vw', height: '400px', margin: '8%'}}>
+        <div style={{width: '30vw', height: '400px', margin: '2%'}}>
         <Line
           data={props.headshots}
           height={null}
@@ -337,7 +337,7 @@ export default function Home(props) {
         />
         </div>
 
-        <div style={{width: '25vw', height: '400px', margin: '8%'}}>
+        <div style={{width: '30vw', height: '400px', margin: '2%'}}>
         <Line
           data={props.bodyshots}
           height={null}
@@ -349,7 +349,7 @@ export default function Home(props) {
         />
         </div>
 
-        <div style={{width: '25vw', height: '400px', margin: '8%'}}>
+        <div style={{width: '30vw', height: '400px', margin: '2%'}}>
         <Line
           data={props.legshots}
           height={null}
@@ -361,34 +361,34 @@ export default function Home(props) {
         />
         </div>
 
-        <div style={{width: '25vw', height: '400px', margin: '8%'}}>
+        <div style={{width: '30vw', height: '400px', margin: '2%'}}>
         <Bar data={dataScore}  
           height={null}
           width={null}          
           options= {{maintainAspectRatio: false}} />
         </div>
 
-        <div style={{width: '25vw', height: '400px', margin: '8%'}}>
+        <div style={{width: '30vw', height: '400px', margin: '2%'}}>
         <Bar data={dataScorePerRound}
              height={null}
              width={null}          
              options= {{maintainAspectRatio: false}} />
         </div>
 
-        <div style={{width: '25vw', height: '400px', margin: '8%'}}>
+        <div style={{width: '30vw', height: '400px', margin: '2%'}}>
         <Bar data={dataEcon} 
              height={null}
              width={null}          
              options= {{maintainAspectRatio: false}}/>
         </div>
         
-        <div style={{width: '25vw', height: '400px', margin: '8%'}}>
+        <div style={{width: '30vw', height: '400px', margin: '2%'}}>
         <Bar data={dataKda} 
              height={null}
              width={null}          
              options= {{maintainAspectRatio: false}}/>
         </div>        
-          {radars.map(p => (<div style={{width: '25vw', height: '400px', margin: '8%'}}><Radar data={p} options= {{maintainAspectRatio: false, scale: {
+          {radars.map(p => (<div style={{width: '30vw', height: '400px', margin: '2%'}}><Radar data={p} options= {{maintainAspectRatio: false, scale: {
               angleLines: {
                   display: false
               },
