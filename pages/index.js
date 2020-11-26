@@ -1,7 +1,7 @@
 import Head from 'next/head'
 import styles from '../styles/Home.module.css'
 import axios from 'axios';
-import {Line} from 'react-chartjs-2';
+import {Line, Radar} from 'react-chartjs-2';
 import {Bar} from 'react-chartjs-2';
 import { execOnce } from 'next/dist/next-server/lib/utils';
 
@@ -148,8 +148,7 @@ export async function mergePlayerData(player1, player2) {
   if (player1 && player2 && player1.matches && player2.matches) {
     player1.matches = new Map([...player1.matches, ...player2.matches])
   }
-
-  console.log(player1.matches)
+  
   return player1
 }
 
@@ -275,6 +274,27 @@ export default function Home(props) {
     }]  
   };
 
+  
+  const maxEcon = Math.max.apply(Math, props.avgData.map(function(o) { return o.avgEconRating; }))  
+  const maxKda = Math.max.apply(Math, props.avgData.map(function(o) { return o.avgKda; }))
+  const maxScore = Math.max.apply(Math, props.avgData.map(function(o) { return o.avgScore; }))
+  const maxScorePerRound = Math.max.apply(Math, props.avgData.map(function(o) { return o.avgScorePerRound; }))
+
+  const radars = props.avgData.map(p => ({
+    labels: ['Econ Rating', 'KDA', 'Score', 'Score per Round'],
+    datasets: [{
+      label: p.name,
+      backgroundColor: `rgba(${p.profile.color.r},${p.profile.color.g},${p.profile.color.b},0.4)`,
+      data: [p.avgEconRating * 100 / maxEcon, 
+             p.avgKda * 100 / maxKda, 
+             p.avgScore * 100 / maxScore,
+             p.avgScorePerRound * 100 / maxScorePerRound]
+    }]
+    })
+  )
+  
+  console.log(JSON.stringify(radars))
+  
   return (
     <div className={styles.container}>
       <Head>
@@ -288,7 +308,7 @@ export default function Home(props) {
         </h1>
 
       <div className={styles.grid}>
-        <div style={{width: '500px', height: '500px'}}>
+        <div style={{width: '25vw', height: '400px', margin: '8%'}}>
         <Line
           data={props.kda}
           height={null}
@@ -296,11 +316,11 @@ export default function Home(props) {
           options= {{title: {
                       display: true,
                       text: 'KDA Ratio'
-           }, maintainAspectRatio: false}}
+           }, maintainAspectRatio: false, responsive: true}}
         />
         </div>
 
-        <div style={{width: '500px', height: '500px'}}>
+        <div style={{width: '25vw', height: '400px', margin: '8%'}}>
         <Line
           data={props.headshots}
           height={null}
@@ -308,11 +328,11 @@ export default function Home(props) {
           options= {{title: {
                       display: true,
                       text: '% Headshots'
-           }, maintainAspectRatio: false}}
+           }, maintainAspectRatio: false, responsive: true}}
         />
         </div>
 
-        <div style={{width: '500px', height: '500px'}}>
+        <div style={{width: '25vw', height: '400px', margin: '8%'}}>
         <Line
           data={props.bodyshots}
           height={null}
@@ -324,7 +344,7 @@ export default function Home(props) {
         />
         </div>
 
-        <div style={{width: '500px', height: '500px'}}>
+        <div style={{width: '25vw', height: '400px', margin: '8%'}}>
         <Line
           data={props.legshots}
           height={null}
@@ -336,46 +356,45 @@ export default function Home(props) {
         />
         </div>
 
-        <div style={{width: '500px', height: '400px'}}>
+        <div style={{width: '25vw', height: '400px', margin: '8%'}}>
         <Bar data={dataScore}  
           height={null}
           width={null}          
           options= {{maintainAspectRatio: false}} />
         </div>
 
-        <div style={{width: '500px', height: '500px'}}>
+        <div style={{width: '25vw', height: '400px', margin: '8%'}}>
         <Bar data={dataScorePerRound}
              height={null}
              width={null}          
              options= {{maintainAspectRatio: false}} />
         </div>
 
-        <div style={{width: '500px', height: '500px'}}>
+        <div style={{width: '25vw', height: '400px', margin: '8%'}}>
         <Bar data={dataEcon} 
              height={null}
              width={null}          
              options= {{maintainAspectRatio: false}}/>
         </div>
         
-        <div style={{width: '500px', height: '500px'}}>
+        <div style={{width: '25vw', height: '400px', margin: '8%'}}>
         <Bar data={dataKda} 
              height={null}
              width={null}          
              options= {{maintainAspectRatio: false}}/>
-        </div>
+        </div>        
+          {radars.map(p => (<div style={{width: '25vw', height: '400px', margin: '8%'}}><Radar data={p} options= {{maintainAspectRatio: false, scale: {
+              angleLines: {
+                  display: false
+              },
+              ticks: {
+                  suggestedMin: 60,
+                  suggestedMax: 100
+              }
+          }}} 
+          /></div>))}                  
         </div>
       </main>
-
-      <footer className={styles.footer}>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{' '}
-          <img src="/vercel.svg" alt="Vercel Logo" className={styles.logo} />
-        </a>
-      </footer>
     </div>
   )
 }
