@@ -5,15 +5,20 @@ import {Line, Radar} from 'react-chartjs-2';
 import {Bar} from 'react-chartjs-2';
 import { execOnce } from 'next/dist/next-server/lib/utils';
 
-function getKda(info, dateOffset) {
-  let date = new Date(new Date().setDate(new Date().getDate()+dateOffset)).toISOString().slice(0,10);
-  let matches = info.matches.filter(m => m.metadata.modeName == "Competitive");
-  matches = matches.filter(match => match.metadata.timestamp.slice(0,10) == date)
-  const sumKda = matches.reduce((current, match) => match.segments[0].stats.kdRatio.value + current, 0);
-  const avgKda = sumKda / matches.length
+function getKda(profile, dateOffset) {
+  const date = new Date(new Date().setDate(new Date().getDate()+dateOffset)).toISOString().slice(0,10);
+  const profilePlayers = profile.players.filter(p => p !== undefined && p.matches !== undefined);
+  let profileMatches = profilePlayers.map(p => p.matches).flat().filter(m => m !== undefined && m.metadata.modeName == "Competitive");
+
+  profileMatches = profileMatches.filter(match => match.metadata.timestamp.slice(0,10) == date)
+  const sumKda = profileMatches.reduce((current, match) => match.segments[0].stats.kdRatio.value + current, 0);
+  const avgKda = sumKda / profileMatches.length
   return avgKda;
 }
 
+<<<<<<< HEAD
+function getAvg(profile) {
+=======
 function getAvg(info) {
   const matches = info.matches.filter(m => m.metadata.modeName == "Competitive");
   const name = parseName(info.requestingPlayerAttributes.platformUserIdentifier);
@@ -21,52 +26,65 @@ function getAvg(info) {
   
   const sumKda = matches.reduce((current, match) => match.segments[0].stats.kdRatio.value + current, 0);
   const avgKda = sumKda / matches.length
+>>>>>>> 4c8adba082e55a05cc953677e558f061aa907900
 
-  const sumScore = matches.reduce((current, match) => match.segments[0].stats.score.value + current, 0);
-  const avgScore = sumScore / matches.length;
+  const name = profile.name;
+  const rgb = profile.rgb;
 
-  const econRating = matches.reduce((current, match) => match.segments[0].stats.econRating.value + current, 0);
-  const avgEconRating = econRating / matches.length;
+  const profilePlayers = profile.players.filter(p => p !== undefined && p.matches !== undefined);
+  const profileMatches = profilePlayers.map(p => p.matches).flat().filter(m => m !== undefined && m.metadata.modeName == "Competitive");
+    
+  const sumKda = profileMatches.reduce((current, match) => match.segments[0].stats.kdRatio.value + current, 0);
+  const avgKda = sumKda / profileMatches.length
+
+  const sumScore = profileMatches.reduce((current, match) => match.segments[0].stats.score.value + current, 0);
+  const avgScore = sumScore / profileMatches.length;
+
+  const econRating = profileMatches.reduce((current, match) => match.segments[0].stats.econRating.value + current, 0);
+  const avgEconRating = econRating / profileMatches.length;
  
-  const sumScorePerRound = matches.reduce((current, match) => match.segments[0].stats.scorePerRound.value + current, 0);
-  const avgScorePerRound = sumScorePerRound / matches.length;
+  const sumScorePerRound = profileMatches.reduce((current, match) => match.segments[0].stats.scorePerRound.value + current, 0);
+  const avgScorePerRound = sumScorePerRound / profileMatches.length;
 
-  const nmatches = matches.length;  
+  const nmatches = profileMatches.length;  
 
-  return {name, profile, avgKda, avgScore, avgEconRating, avgScorePerRound, nmatches};
+  return {name, rgb, avgKda, avgScore, avgEconRating, avgScorePerRound, nmatches};
 }
 
-function random_rgba() {
-  var o = Math.round, r = Math.random, s = 255;
-  return 'rgba(' + o(r()*s) + ',' + o(r()*s) + ',' + o(r()*s) + ',' + r().toFixed(1) + ')';
-}
-
+<<<<<<< HEAD
+function randomRGB() {
+=======
 function parseName(name){
   return name.substr(0, name.indexOf('#'))
 }
 
 function composePlayerDataSet(info, func) {
+>>>>>>> 4c8adba082e55a05cc953677e558f061aa907900
   const randomBetween = (min, max) => min + Math.floor(Math.random() * (max - min + 1));
   let r = randomBetween(0,255)
   let g = randomBetween(0,255)
   let b = randomBetween(0,255)
+  return {r,g,b}
+}
 
-  r = info.profile.color.r
-  g = info.profile.color.g
-  b = info.profile.color.b
+function composePlayerDataSet(profile, func) {
 
   return (
   {
+<<<<<<< HEAD
+    label: profile.name,
+=======
     label: parseName(info.requestingPlayerAttributes.platformUserIdentifier),
+>>>>>>> 4c8adba082e55a05cc953677e558f061aa907900
     fill: false,
     lineTension: 0.1,
-    backgroundColor: `rgba(${r},${g},${b},0.4)`,
-    borderColor: `rgba(${r},${g},${b},1)`,
+    backgroundColor: `rgba(${profile.rgb.r},${profile.rgb.g},${profile.rgb.b},0.4)`,
+    borderColor: `rgba(${profile.rgb.r},${profile.rgb.g},${profile.rgb.b},1)`,
     borderCapStyle: 'butt',
     borderDash: [],
     borderDashOffset: 0.0,
     borderJoinStyle: 'miter',
-    pointBorderColor: `rgba(${r},${g},${b},1)`,
+    pointBorderColor: `rgba(${profile.rgb.r},${profile.rgb.g},${profile.rgb.b},1)`,
     pointBackgroundColor: '#fff',
     pointBorderWidth: 1,
     pointHoverRadius: 5,
@@ -76,18 +94,19 @@ function composePlayerDataSet(info, func) {
     pointRadius: 1,
     pointHitRadius: 10,
     spanGaps: true,
-    data: [func(info,-6), func(info,-5), func(info,-4), func(info,-3), func(info,-2), func(info,-1), func(info,0)]
+    data: [func(profile,-9), func(profile,-8), func(profile,-7), func(profile,-6), func(profile,-5), func(profile,-4), func(profile,-3), func(profile,-2), func(profile,-1), func(profile,0)]
   }
   )
 }
 
-function composePlayerAccuracy(info, dateOffset) {
-  let date = new Date(new Date().setDate(new Date().getDate()+dateOffset)).toISOString().slice(0,10);
-  let matches = info.matches.filter(m => m.metadata.modeName == "Competitive" && m.metadata.timestamp.slice(0,10) == date);
+function composePlayerAccuracy(profile, dateOffset) {
+  const date = new Date(new Date().setDate(new Date().getDate()+dateOffset)).toISOString().slice(0,10);
+  const profilePlayers = profile.players.filter(p => p !== undefined && p.matches !== undefined);
+  const profileMatches = profilePlayers.map(p => p.matches).flat().filter(m => m !== undefined && m.metadata.modeName == "Competitive" && m.metadata.timestamp.slice(0,10) == date);
 
-  const headshots = matches.reduce((current, match) => match.segments[0].stats.dealtHeadshots.value + current, 0);
-  const bodyshots = matches.reduce((current, match) => match.segments[0].stats.dealtBodyshots.value + current, 0);
-  const legshots = matches.reduce((current, match) => match.segments[0].stats.dealtLegshots.value + current, 0);
+  const headshots = profileMatches.reduce((current, match) => match.segments[0].stats.dealtHeadshots.value + current, 0);
+  const bodyshots = profileMatches.reduce((current, match) => match.segments[0].stats.dealtBodyshots.value + current, 0);
+  const legshots = profileMatches.reduce((current, match) => match.segments[0].stats.dealtLegshots.value + current, 0);
   const totalShots = headshots + bodyshots + legshots;
   const pHeadshots = headshots * 100 / totalShots
   const pBodyshots = bodyshots * 100 / totalShots
@@ -96,10 +115,10 @@ function composePlayerAccuracy(info, dateOffset) {
   return {pHeadshots, pBodyshots, pLegshots}
 }
 
-function composeKdaGraph(players) {
+function composeKdaGraph(profiles) {
   const data = {
-    labels: ['-6', '-5', '-4', '-3', '-2', '-1', 'Today'],
-    datasets: players.map( player => composePlayerDataSet(player, (p, o) => getKda(p,o))
+    labels: ['-9', '-8', '-7', '-6', '-5', '-4', '-3', '-2', '-1', 'Today'],
+    datasets: profiles.map( profile => composePlayerDataSet(profile, (p, o) => getKda(p,o))
     )
   };
   return data  
@@ -107,7 +126,7 @@ function composeKdaGraph(players) {
 
 function composeHeadshotGraph(players) {
   const data = {
-    labels: ['-6', '-5', '-4', '-3', '-2', '-1', 'Today'],
+    labels: ['-9', '-8', '-7', '-6', '-5', '-4', '-3', '-2', '-1', 'Today'],
     datasets: players.map( player => composePlayerDataSet(player, (p,o) => composePlayerAccuracy(p, o).pHeadshots)
     )
   };
@@ -116,7 +135,7 @@ function composeHeadshotGraph(players) {
 
 function composeBodyshotGraph(players) {
   const data = {
-    labels: ['-6', '-5', '-4', '-3', '-2', '-1', 'Today'],
+    labels: ['-9', '-8', '-7', '-6', '-5', '-4', '-3', '-2', '-1', 'Today'],
     datasets: players.map( player => composePlayerDataSet(player, (p,o) => composePlayerAccuracy(p, o).pBodyshots)
     )
   };
@@ -125,7 +144,7 @@ function composeBodyshotGraph(players) {
 
 function composeLegshotGraph(players) {
   const data = {
-    labels: ['-6', '-5', '-4', '-3', '-2', '-1', 'Today'],
+    labels: ['-9', '-8', '-7', '-6', '-5', '-4', '-3', '-2', '-1', 'Today'],
     datasets: players.map( player => composePlayerDataSet(player, (p,o) => composePlayerAccuracy(p, o).pLegshots)
     )
   };
@@ -144,6 +163,7 @@ async function getPlayerData(player) {
   return res.data.data
 }
 
+<<<<<<< HEAD
 export async function mergePlayerData(player1, player2) {
   if (player1 && player2 && player1.matches && player2.matches) {
     player1.matches = new Map([...player1.matches, ...player2.matches])
@@ -169,24 +189,51 @@ function generateProfileColors(players) {
 
 }
 
+=======
+>>>>>>> 1b5e1ee8d744f2cfe265bb0665e136e51b45ca00
 export async function getStaticProps() {
 
   const broker = await getPlayerData('Broker%236969')
-  const ikerik = await getPlayerData('Ikeric%235421')
-  const players = [await mergePlayerData(broker, ikerik), 
-  await getPlayerData('%CE%9E%CE%94%CE%9E%20Chaos%23Prime'),
-  await getPlayerData('Zehcnas%23666'),
-  await getPlayerData('Wallux%23wal'),
-  await getPlayerData('Iskes%235895')];
+  const neuras = await getPlayerData('Neuras%234402')
+  const ikeric = await getPlayerData('Ikeric%235421')
+  const zeki = await getPlayerData('Zehcnas%23666')
+  const chaos = await getPlayerData('%CE%9E%CE%94%CE%9E%20Chaos%23Prime')
+  const wallux = await getPlayerData('Wallux%23wal')
+  const iskes = await getPlayerData('Iskes%235895')
+  
+  const profiles = [
+    {
+      name: "Broker",
+      rgb: randomRGB(),
+      players: [broker, neuras, ikeric]
+    },
+    {
+      name: "Zehcnas",
+      rgb: randomRGB(),
+      players: [zeki]
+    },
+    {
+      name: "Chaos",
+      rgb: randomRGB(),
+      players: [chaos]
+    },
+    {
+      name: "Wallux",
+      rgb: randomRGB(),
+      players: [wallux]
+    },
+    {
+      name: "Iskes",
+      rgb: randomRGB(),
+      players: [iskes]
+    },
+  ];
 
-  generateProfileColors(players);
-
-  const avgData = [getAvg(players[0]), getAvg(players[1]), getAvg(players[2]), getAvg(players[3]), getAvg(players[4])];
-
-  const kda = composeKdaGraph(players)
-  const headshots = composeHeadshotGraph(players)
-  const bodyshots = composeBodyshotGraph(players)
-  const legshots = composeLegshotGraph(players)
+  const avgData = profiles.map( p => getAvg(p));
+  const kda = composeKdaGraph(profiles)
+  const headshots = composeHeadshotGraph(profiles)
+  const bodyshots = composeBodyshotGraph(profiles)
+  const legshots = composeLegshotGraph(profiles)
 
   return {
     props: {
@@ -224,8 +271,8 @@ export default function Home(props) {
     datasets: [{
       label: "AVG SCORE",
       data: props.avgData.map(m => m.avgScore),
-      backgroundColor: props.avgData.map(m =>`rgba(${m.profile.color.r},${m.profile.color.g},${m.profile.color.b},0.4)`),
-      borderColor: props.avgData.map(m =>`rgba(${m.profile.color.r},${m.profile.color.g},${m.profile.color.b},1)`),
+      backgroundColor: props.avgData.map(m =>`rgba(${m.rgb.r},${m.rgb.g},${m.rgb.b},0.4)`),
+      borderColor: props.avgData.map(m =>`rgba(${m.rgb.r},${m.rgb.g},${m.rgb.b},1)`),
       borderWidth: 1,
     }]  
   };
@@ -235,8 +282,8 @@ export default function Home(props) {
     datasets: [{
       label: "ECON RATING",
       data: props.avgData.map(m => m.avgEconRating),
-      backgroundColor: props.avgData.map(m =>`rgba(${m.profile.color.r},${m.profile.color.g},${m.profile.color.b},0.4)`),
-      borderColor: props.avgData.map(m =>`rgba(${m.profile.color.r},${m.profile.color.g},${m.profile.color.b},1)`),
+      backgroundColor: props.avgData.map(m =>`rgba(${m.rgb.r},${m.rgb.g},${m.rgb.b},0.4)`),
+      borderColor: props.avgData.map(m =>`rgba(${m.rgb.r},${m.rgb.g},${m.rgb.b},1)`),
       borderWidth: 1,
     }]  
   };
@@ -246,8 +293,8 @@ export default function Home(props) {
     datasets: [{
       label: "KDA",
       data: props.avgData.map(m => m.avgKda),
-      backgroundColor: props.avgData.map(m =>`rgba(${m.profile.color.r},${m.profile.color.g},${m.profile.color.b},0.4)`),
-      borderColor: props.avgData.map(m =>`rgba(${m.profile.color.r},${m.profile.color.g},${m.profile.color.b},1)`),
+      backgroundColor: props.avgData.map(m =>`rgba(${m.rgb.r},${m.rgb.g},${m.rgb.b},0.4)`),
+      borderColor: props.avgData.map(m =>`rgba(${m.rgb.r},${m.rgb.g},${m.rgb.b},1)`),
       borderWidth: 1,
     }]  
   };
@@ -257,8 +304,8 @@ export default function Home(props) {
     datasets: [{
       label: "SCORE PER ROUND",
       data: props.avgData.map(m => m.avgScorePerRound),
-      backgroundColor: props.avgData.map(m =>`rgba(${m.profile.color.r},${m.profile.color.g},${m.profile.color.b},0.4)`),
-      borderColor: props.avgData.map(m =>`rgba(${m.profile.color.r},${m.profile.color.g},${m.profile.color.b},1)`),
+      backgroundColor: props.avgData.map(m =>`rgba(${m.rgb.r},${m.rgb.g},${m.rgb.b},0.4)`),
+      borderColor: props.avgData.map(m =>`rgba(${m.rgb.r},${m.rgb.g},${m.rgb.b},1)`),
       borderWidth: 1,
     }]  
   };
@@ -268,8 +315,8 @@ export default function Home(props) {
     datasets: [{
       label: "MATCHES",
       data: props.avgData.map(m => m.nmatches),
-      backgroundColor: props.avgData.map(m =>`rgba(${m.profile.color.r},${m.profile.color.g},${m.profile.color.b},0.4)`),
-      borderColor: props.avgData.map(m =>`rgba(${m.profile.color.r},${m.profile.color.g},${m.profile.color.b},1)`),
+      backgroundColor: props.avgData.map(m =>`rgba(${m.rgb.r},${m.rgb.g},${m.rgb.b},0.4)`),
+      borderColor: props.avgData.map(m =>`rgba(${m.rgb.r},${m.rgb.g},${m.rgb.b},1)`),
       borderWidth: 1,
     }]  
   };
