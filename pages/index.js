@@ -16,7 +16,7 @@ function getKda(info, dateOffset) {
 
 function getAvg(info) {
   const matches = info.matches.filter(m => m.metadata.modeName == "Competitive");
-  const name = info.requestingPlayerAttributes.platformUserIdentifier;
+  const name = parseName(info.requestingPlayerAttributes.platformUserIdentifier);
   const profile = info.profile;
   
   const sumKda = matches.reduce((current, match) => match.segments[0].stats.kdRatio.value + current, 0);
@@ -41,6 +41,10 @@ function random_rgba() {
   return 'rgba(' + o(r()*s) + ',' + o(r()*s) + ',' + o(r()*s) + ',' + r().toFixed(1) + ')';
 }
 
+function parseName(name){
+  return name.substr(0, name.indexOf('#'))
+}
+
 function composePlayerDataSet(info, func) {
   const randomBetween = (min, max) => min + Math.floor(Math.random() * (max - min + 1));
   let r = randomBetween(0,255)
@@ -53,7 +57,7 @@ function composePlayerDataSet(info, func) {
 
   return (
   {
-    label: info.requestingPlayerAttributes.platformUserIdentifier,
+    label: parseName(info.requestingPlayerAttributes.platformUserIdentifier),
     fill: false,
     lineTension: 0.1,
     backgroundColor: `rgba(${r},${g},${b},0.4)`,
