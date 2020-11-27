@@ -449,12 +449,12 @@ export default function Home(props) {
         }}} 
         /></div>))}    
 
-        <table {...getTableProps()} style={{ border: 'solid 1px blue' }}>
+        <table {...getTableProps()} style={{ border: 'solid 1px black', 'border-spacing': 0 }}>
               <thead>
                 {headerGroups.map(headerGroup => (
-                  <tr {...headerGroup.getHeaderGroupProps()}>
+                  <tr {...headerGroup.getHeaderGroupProps()} style={{ border: 'solid 1px black' }}>
                     {headerGroup.headers.map(column => (
-                        <th {...column.getHeaderProps(column.getSortByToggleProps())}>                          
+                        <th {...column.getHeaderProps(column.getSortByToggleProps())} style={{ border: 'solid 1px black' }}>                          
                         {column.render('Header')}
                           <span>
                             {column.isSorted ? (column.isSortedDesc ? ' 🔽' : ' 🔼') : ''}
@@ -468,10 +468,10 @@ export default function Home(props) {
                 {rows.map(row => {
                   prepareRow(row)
                   return (
-                    <tr {...row.getRowProps()}>
+                    <tr {...row.getRowProps()} >
                       {row.cells.map(cell => {
                         return (
-                          <td {...cell.getCellProps()}>
+                          <td {...cell.getCellProps()} style={{ border: 'solid 1px black', padding: '0.5rem' }}>
                             {cell.render('Cell')}
                           </td>
                         )
