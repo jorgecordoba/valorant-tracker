@@ -3,6 +3,8 @@ import styles from '../styles/Home.module.css'
 import axios from 'axios';
 import {Bar, Line, Radar} from 'react-chartjs-2';
 import { execOnce } from 'next/dist/next-server/lib/utils';
+import { useSortBy, useTable } from 'react-table'
+import React from "react";
 
 function getKda(profile, dateOffset) {
   const date = new Date(new Date().setDate(new Date().getDate()+dateOffset)).toISOString().slice(0,10);
@@ -310,8 +312,43 @@ export default function Home(props) {
     }]
     })
   )
-  
-  console.log(JSON.stringify(radars))
+
+  const {
+    getTableProps,
+    getTableBodyProps,
+    headerGroups,
+    rows,
+    prepareRow,
+  } = useTable(
+    {
+      columns : React.useMemo( () => [
+        { 
+          Header: 'Name',
+          accessor: 'name',
+          sortType: 'basic'
+        },
+        {
+          Header: 'KDA Average',
+          accessor: 'avgKda',
+          sortType: 'basic'
+        },
+        {
+          Header: 'Round Average',
+          accessor: 'avgScorePerRound',
+          sortType: 'basic'
+        },
+        {
+          Header: 'Score Average',
+          accessor: 'avgScore',
+          sortType: 'basic'
+        }
+      ], []),
+      data: React.useMemo(() => props.avgData, []),
+      initialState: {
+        sortBy: [{ id: 'avgKda', desc: true }]
+      }
+    }, useSortBy)
+
   
   return (
     <div className={styles.container}>
@@ -401,16 +438,50 @@ export default function Home(props) {
              width={null}          
              options= {{maintainAspectRatio: false}}/>
         </div>        
-          {radars.map(p => (<div style={{width: '30vw', height: '400px', margin: '2%'}}><Radar data={p} options= {{maintainAspectRatio: false, scale: {
-              angleLines: {
-                  display: false
-              },
-              ticks: {
-                  suggestedMin: 60,
-                  suggestedMax: 100
-              }
-          }}} 
-          /></div>))}                  
+        {radars.map(p => (<div style={{width: '30vw', height: '400px', margin: '2%'}}><Radar data={p} options= {{maintainAspectRatio: false, scale: {
+            angleLines: {
+                display: false
+            },
+            ticks: {
+                suggestedMin: 60,
+                suggestedMax: 100
+            }
+        }}} 
+        /></div>))}    
+
+        <table {...getTableProps()} style={{ border: 'solid 1px blue' }}>
+              <thead>
+                {headerGroups.map(headerGroup => (
+                  <tr {...headerGroup.getHeaderGroupProps()}>
+                    {headerGroup.headers.map(column => (
+                        <th {...column.getHeaderProps(column.getSortByToggleProps())}>                          
+                        {column.render('Header')}
+                          <span>
+                            {column.isSorted ? (column.isSortedDesc ? ' 🔽' : ' 🔼') : ''}
+                          </span>
+                        </th>
+                    ))}
+                  </tr>
+                ))}
+              </thead>
+              <tbody {...getTableBodyProps()}>
+                {rows.map(row => {
+                  prepareRow(row)
+                  return (
+                    <tr {...row.getRowProps()}>
+                      {row.cells.map(cell => {
+                        return (
+                          <td {...cell.getCellProps()}>
+                            {cell.render('Cell')}
+                          </td>
+                        )
+                      })}
+                    </tr>
+                  )
+                })}
+              </tbody>
+            </table>  
+
         </div>
       </main>
     </div>
