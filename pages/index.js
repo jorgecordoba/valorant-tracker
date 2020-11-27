@@ -5,42 +5,12 @@ import {Bar, Line, Radar} from 'react-chartjs-2';
 import { execOnce } from 'next/dist/next-server/lib/utils';
 import { useSortBy, useTable } from 'react-table'
 import React from "react";
+import {getKda, getAvg} from '../utils/calculations';
+import {LineGraph} from '../components/linegraph'
+import { BarGraph } from '../components/bargraph';
+import { RadarGraph } from '../components/radargraph';
 
-function getKda(profile, dateOffset) {
-  const date = new Date(new Date().setDate(new Date().getDate()+dateOffset)).toISOString().slice(0,10);
-  const profilePlayers = profile.players.filter(p => p !== undefined && p.matches !== undefined);
-  let profileMatches = profilePlayers.map(p => p.matches).flat().filter(m => m !== undefined && m.metadata.modeName == "Competitive");
 
-  profileMatches = profileMatches.filter(match => match.metadata.timestamp.slice(0,10) == date)
-  const sumKda = profileMatches.reduce((current, match) => match.segments[0].stats.kdRatio.value + current, 0);
-  const avgKda = sumKda / profileMatches.length
-  return avgKda;
-}
-
-function getAvg(profile) {
-
-  const name = profile.name;
-  const rgb = profile.rgb;
-
-  const profilePlayers = profile.players.filter(p => p !== undefined && p.matches !== undefined);
-  const profileMatches = profilePlayers.map(p => p.matches).flat().filter(m => m !== undefined && m.metadata.modeName == "Competitive");
-    
-  const sumKda = profileMatches.reduce((current, match) => match.segments[0].stats.kdRatio.value + current, 0);
-  const avgKda = sumKda / profileMatches.length
-
-  const sumScore = profileMatches.reduce((current, match) => match.segments[0].stats.score.value + current, 0);
-  const avgScore = sumScore / profileMatches.length;
-
-  const econRating = profileMatches.reduce((current, match) => match.segments[0].stats.econRating.value + current, 0);
-  const avgEconRating = econRating / profileMatches.length;
- 
-  const sumScorePerRound = profileMatches.reduce((current, match) => match.segments[0].stats.scorePerRound.value + current, 0);
-  const avgScorePerRound = sumScorePerRound / profileMatches.length;
-
-  const nmatches = profileMatches.length;  
-
-  return {name, rgb, avgKda, avgScore, avgEconRating, avgScorePerRound, nmatches};
-}
 
 function randomRGB() {
   const randomBetween = (min, max) => min + Math.floor(Math.random() * (max - min + 1));
@@ -363,91 +333,17 @@ export default function Home(props) {
         </h1>
 
       <div className={styles.grid}>
-        <div style={{width: '30vw', height: '400px', margin: '2%'}}>
-        <Line
-          data={props.kda}
-          height={null}
-          width={null}          
-          options= {{title: {
-                      display: true,
-                      text: 'KDA Ratio'
-           }, maintainAspectRatio: false, responsive: true}}
-        />
-        </div>
-
-        <div style={{width: '30vw', height: '400px', margin: '2%'}}>
-        <Line
-          data={props.headshots}
-          height={null}
-          width={null}          
-          options= {{title: {
-                      display: true,
-                      text: '% Headshots'
-           }, maintainAspectRatio: false, responsive: true}}
-        />
-        </div>
-
-        <div style={{width: '30vw', height: '400px', margin: '2%'}}>
-        <Line
-          data={props.bodyshots}
-          height={null}
-          width={null}          
-          options= {{title: {
-                      display: true,
-                      text: '% Bodyshots'
-           }, maintainAspectRatio: false}}
-        />
-        </div>
-
-        <div style={{width: '30vw', height: '400px', margin: '2%'}}>
-        <Line
-          data={props.legshots}
-          height={null}
-          width={null}          
-          options= {{title: {
-                      display: true,
-                      text: '% Podología'
-           }, maintainAspectRatio: false}}
-        />
-        </div>
-
-        <div style={{width: '30vw', height: '400px', margin: '2%'}}>
-        <Bar data={dataScore}  
-          height={null}
-          width={null}          
-          options= {{maintainAspectRatio: false}} />
-        </div>
-
-        <div style={{width: '30vw', height: '400px', margin: '2%'}}>
-        <Bar data={dataScorePerRound}
-             height={null}
-             width={null}          
-             options= {{maintainAspectRatio: false}} />
-        </div>
-
-        <div style={{width: '30vw', height: '400px', margin: '2%'}}>
-        <Bar data={dataEcon} 
-             height={null}
-             width={null}          
-             options= {{maintainAspectRatio: false}}/>
-        </div>
-        
-        <div style={{width: '30vw', height: '400px', margin: '2%'}}>
-        <Bar data={dataKda} 
-             height={null}
-             width={null}          
-             options= {{maintainAspectRatio: false}}/>
-        </div>        
-        {radars.map(p => (<div style={{width: '30vw', height: '400px', margin: '2%'}}><Radar data={p} options= {{maintainAspectRatio: false, scale: {
-            angleLines: {
-                display: false
-            },
-            ticks: {
-                suggestedMin: 60,
-                suggestedMax: 100
-            }
-        }}} 
-        /></div>))}    
+        <LineGraph data={props.kda} title= 'KDA Ratio' />
+        <LineGraph data={props.headshots} title= '% Headshots' />
+        <LineGraph data={props.bodyshots} title= '% Bodyshots' />
+        <LineGraph data={props.legshots} title= '% Podología' />
+       
+        <BarGraph data={dataScore} />
+        <BarGraph data={dataScorePerRound} />
+        <BarGraph data={dataEcon} />
+        <BarGraph data={dataKda} />
+    
+        {radars.map(p => (<RadarGraph data={p} />))}    
 
         <table {...getTableProps()} style={{ border: 'solid 1px black', 'border-spacing': 0 }}>
               <thead>
