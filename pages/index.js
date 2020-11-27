@@ -163,7 +163,17 @@ export async function getStaticProps() {
     {
       name: "Broker",
       rgb: randomRGB(),
-      players: [broker, neuras, ikeric]
+      players: [broker]
+    },
+    {
+      name: "Neuras",
+      rgb: randomRGB(),
+      players: [neuras]
+    },
+    {
+      name: "Ikeric",
+      rgb: randomRGB(),
+      players: [ikeric]
     },
     {
       name: "Zehcnas",
