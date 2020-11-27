@@ -1,8 +1,7 @@
 import Head from 'next/head'
 import styles from '../styles/Home.module.css'
 import axios from 'axios';
-import {Line, Radar} from 'react-chartjs-2';
-import {Bar} from 'react-chartjs-2';
+import {Bar, Line, Radar} from 'react-chartjs-2';
 import { execOnce } from 'next/dist/next-server/lib/utils';
 
 function getKda(profile, dateOffset) {
@@ -93,9 +92,13 @@ function composePlayerAccuracy(profile, dateOffset) {
   return {pHeadshots, pBodyshots, pLegshots}
 }
 
+function getLabels() {
+  return ['-9', '-8', '-7', '-6', '-5', '-4', '-3', '-2', '-1', 'Today']
+}
+
 function composeKdaGraph(profiles) {
   const data = {
-    labels: ['-9', '-8', '-7', '-6', '-5', '-4', '-3', '-2', '-1', 'Today'],
+    labels: getLabels(),
     datasets: profiles.map( profile => composePlayerDataSet(profile, (p, o) => getKda(p,o))
     )
   };
@@ -104,7 +107,7 @@ function composeKdaGraph(profiles) {
 
 function composeHeadshotGraph(players) {
   const data = {
-    labels: ['-9', '-8', '-7', '-6', '-5', '-4', '-3', '-2', '-1', 'Today'],
+    labels: getLabels(),
     datasets: players.map( player => composePlayerDataSet(player, (p,o) => composePlayerAccuracy(p, o).pHeadshots)
     )
   };
@@ -113,7 +116,7 @@ function composeHeadshotGraph(players) {
 
 function composeBodyshotGraph(players) {
   const data = {
-    labels: ['-9', '-8', '-7', '-6', '-5', '-4', '-3', '-2', '-1', 'Today'],
+    labels: getLabels(),
     datasets: players.map( player => composePlayerDataSet(player, (p,o) => composePlayerAccuracy(p, o).pBodyshots)
     )
   };
@@ -122,7 +125,7 @@ function composeBodyshotGraph(players) {
 
 function composeLegshotGraph(players) {
   const data = {
-    labels: ['-9', '-8', '-7', '-6', '-5', '-4', '-3', '-2', '-1', 'Today'],
+    labels: getLabels(),
     datasets: players.map( player => composePlayerDataSet(player, (p,o) => composePlayerAccuracy(p, o).pLegshots)
     )
   };
