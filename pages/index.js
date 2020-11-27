@@ -52,12 +52,12 @@ export default function Home(props) {
         <LineGraph data={props.bodyshots} title= '% Bodyshots' />
         <LineGraph data={props.legshots} title= '% Podología' />
        
-        <BarGraph data={composeAvgDataSet(props.avgData, p => p.avgScore)} />
-        <BarGraph data={composeAvgDataSet(props.avgData, p => p.avgScorePerRound)} />
-        <BarGraph data={composeAvgDataSet(props.avgData, p => p.avgEconRating)} />
-        <BarGraph data={composeAvgDataSet(props.avgData, p => p.avgKda)} />
+        <BarGraph data={composeAvgDataSet(props.avgData, "Score", p => p.avgScore)} />
+        <BarGraph data={composeAvgDataSet(props.avgData, "Score per round", p => p.avgScorePerRound)} />
+        <BarGraph data={composeAvgDataSet(props.avgData, "Econ Rating", p => p.avgEconRating)} />
+        <BarGraph data={composeAvgDataSet(props.avgData, "KDA", p => p.avgKda)} />
     
-        {composeRadarDataSet(props.avgData).map(p => (<RadarGraph data={p} />))}            
+        {composeRadarDataSet(props.avgData).map(p => (<RadarGraph key={p.datasets[0].label} data={p} />))}            
 
         <StatsTable data={props.avgData} />
 

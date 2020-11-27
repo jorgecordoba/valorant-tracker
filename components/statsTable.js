@@ -40,7 +40,7 @@ export const StatsTable = (props) => {
 
     return (
     <div style={{width: '30vw', height: '400px', margin: '2%'}}>
-    <table {...getTableProps()} style={{ border: 'solid 1px black', 'border-spacing': 0, width: '80%', margin: 'auto' }}>
+    <table {...getTableProps()} style={{ border: 'solid 1px black', borderSpacing: 0, width: '80%', margin: 'auto' }}>
               <thead>
                 {headerGroups.map(headerGroup => (
                   <tr {...headerGroup.getHeaderGroupProps()} style={{ border: 'solid 1px black' }}>

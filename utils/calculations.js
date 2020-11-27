@@ -121,10 +121,10 @@ const getKda = (profile, dateOffset) => {
     }
   );
   
-  export const composeAvgDataSet = (avgData, mapFunc) => ({ 
+  export const composeAvgDataSet = (avgData, label, mapFunc) => ({ 
     labels: avgData.map(m => m.name),
     datasets: [{
-      label: "AVG SCORE",
+      label,
       data: avgData.map(mapFunc),
       backgroundColor: avgData.map(m =>`rgba(${m.rgb.r},${m.rgb.g},${m.rgb.b},0.4)`),
       borderColor: avgData.map(m =>`rgba(${m.rgb.r},${m.rgb.g},${m.rgb.b},1)`),
