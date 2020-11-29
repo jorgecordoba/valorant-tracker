@@ -39,6 +39,11 @@ export async function getProfiles() {
   
   const profiles = [
     {
+      name: "Broker All",
+      rgb: randomRGB(),
+      players: [broker, neuras, ikeric]
+    },
+    {
       name: "Broker",
       rgb: randomRGB(),
       players: [broker]
