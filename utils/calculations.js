@@ -1,11 +1,35 @@
+import moment from 'moment'
+
+function isCompetitiveMatch(match) {
+  return match !== undefined && match.metadata.modeName == "Competitive"
+}
+
+function isInRangeMatch(match, from, to) {
+  if (match !== undefined) {
+    const matchMoment = moment(match.metadata.timestamp)
+    return matchMoment.isBetween(from, to);
+  }
+  return false;  
+}
+
+function isSameDayMatch(match, daysOffset) {  
+  if (match !== undefined) {
+    const offsetDay = moment().local().startOf('day').local().add(daysOffset, 'days').local()
+    const matchDay= moment(match.metadata.timestamp).local().startOf('day').local()
+    
+    return offsetDay.isSame(matchDay)
+  }
+  return false;  
+}
+
 const getKda = (profile, dateOffset) => {
-    const date = new Date(new Date().setDate(new Date().getDate()+dateOffset)).toISOString().slice(0,10);
     const profilePlayers = profile.players.filter(p => p !== undefined && p.matches !== undefined);
-    let profileMatches = profilePlayers.map(p => p.matches).flat().filter(m => m !== undefined && m.metadata.modeName == "Competitive");
+    let profileMatches = profilePlayers.map(p => p.matches)
+      .flat().filter(match => isCompetitiveMatch(match) && isSameDayMatch(match, dateOffset));
   
-    profileMatches = profileMatches.filter(match => match.metadata.timestamp.slice(0,10) == date)
     const sumKda = profileMatches.reduce((current, match) => match.segments[0].stats.kdRatio.value + current, 0);
     const avgKda = sumKda / profileMatches.length
+
     return avgKda;
   }
   
@@ -15,7 +39,8 @@ const getKda = (profile, dateOffset) => {
     const rgb = profile.rgb;
   
     const profilePlayers = profile.players.filter(p => p !== undefined && p.matches !== undefined);
-    const profileMatches = profilePlayers.map(p => p.matches).flat().filter(m => m !== undefined && m.metadata.modeName == "Competitive");
+    const profileMatches = profilePlayers.map(p => p.matches)
+      .flat().filter(match => isCompetitiveMatch(match));
       
     const sumKda = profileMatches.reduce((current, match) => match.segments[0].stats.kdRatio.value + current, 0);
     const avgKda = sumKda / profileMatches.length
@@ -29,7 +54,7 @@ const getKda = (profile, dateOffset) => {
     const sumScorePerRound = profileMatches.reduce((current, match) => match.segments[0].stats.scorePerRound.value + current, 0);
     const avgScorePerRound = sumScorePerRound / profileMatches.length;
   
-    const nmatches = profileMatches.length;  
+    const nmatches = profileMatches.length;
   
     return {name, rgb, avgKda, avgScore, avgEconRating, avgScorePerRound, nmatches};
   }  
@@ -67,9 +92,9 @@ const getKda = (profile, dateOffset) => {
   }
   
   const composePlayerAccuracy = (profile, dateOffset) => {
-    const date = new Date(new Date().setDate(new Date().getDate()+dateOffset)).toISOString().slice(0,10);
     const profilePlayers = profile.players.filter(p => p !== undefined && p.matches !== undefined);
-    const profileMatches = profilePlayers.map(p => p.matches).flat().filter(m => m !== undefined && m.metadata.modeName == "Competitive" && m.metadata.timestamp.slice(0,10) == date);
+    const profileMatches = profilePlayers.map(p => p.matches)
+      .flat().filter(match => isCompetitiveMatch(match) && isSameDayMatch(match, dateOffset))
   
     const headshots = profileMatches.reduce((current, match) => match.segments[0].stats.dealtHeadshots.value + current, 0);
     const bodyshots = profileMatches.reduce((current, match) => match.segments[0].stats.dealtBodyshots.value + current, 0);
