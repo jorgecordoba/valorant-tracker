@@ -185,7 +185,7 @@ const getKda = (profile, dateOffset) => {
   });
 
   export const composeFireDetailDataSet = (avgData, headFunc, bodyFunc, legsFunc) => ({ 
-    labels: avgData.map(m => m.name),
+    labels: avgData.filter(p => !p.hidden).map(m => m.name),
     datasets: [
       {
         label: 'Legshot',
@@ -208,7 +208,7 @@ const getKda = (profile, dateOffset) => {
   });
 
   export const composeFirstBloodsDeathsDataSet = (avgData, firstbloodsFunc, deathsFirstFunc) => ({ 
-    labels: avgData.map(m => m.name),
+    labels: avgData.filter(p => !p.hidden).map(m => m.name),
     datasets: [
       {
         label: 'First Bloods',
