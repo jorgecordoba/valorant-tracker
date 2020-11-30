@@ -42,6 +42,8 @@ const getKda = (profile, dateOffset) => {
     const profileMatches = profilePlayers.map(p => p.matches)
       .flat().filter(match => isCompetitiveMatch(match));
       
+    
+
     const sumKda = profileMatches.reduce((current, match) => match.segments[0].stats.kdRatio.value + current, 0);
     const avgKda = sumKda / profileMatches.length
   
@@ -66,7 +68,14 @@ const getKda = (profile, dateOffset) => {
     const bodyshots = body * 100 / totalShots
     const legshots = legs * 100 / totalShots  
 
-    return {name, rgb, avgKda, avgScore, avgEconRating, avgScorePerRound, nmatches, hidden, headshots, legshots, bodyshots};
+    const firstBloods = profileMatches.reduce((current, match) => match.segments[0].stats.firstBloods.value + current, 0);
+    const deathsFirst = profileMatches.reduce((current, match) => match.segments[0].stats.deathsFirst.value + current, 0) * -1;
+
+    const average = {name, rgb, avgKda, avgScore, avgEconRating, avgScorePerRound, nmatches, hidden, headshots, legshots, bodyshots, firstBloods, deathsFirst};
+
+    console.log(JSON.stringify(average));
+
+    return average;
   }  
 
   const composePlayerDataSet = (profile, func) => {
@@ -175,7 +184,7 @@ const getKda = (profile, dateOffset) => {
     }] 
   });
 
-  export const composeKdaDetailDataSet = (avgData, headFunc, bodyFunc, legsFunc) => ({ 
+  export const composeFireDetailDataSet = (avgData, headFunc, bodyFunc, legsFunc) => ({ 
     labels: avgData.map(m => m.name),
     datasets: [
       {
@@ -196,6 +205,23 @@ const getKda = (profile, dateOffset) => {
         backgroundColor: `rgba(34,139,34,0.4)`,
         stack: 1,
       }]    
+  });
+
+  export const composeFirstBloodsDeathsDataSet = (avgData, firstbloodsFunc, deathsFirstFunc) => ({ 
+    labels: avgData.map(m => m.name),
+    datasets: [
+      {
+        label: 'First Bloods',
+        data: avgData.map(firstbloodsFunc),
+        backgroundColor: `rgba(20,144,255,0.4)`,
+        stack: 1,
+      },     
+      {
+        label: 'Deaths First',
+        data: avgData.map(deathsFirstFunc),
+        backgroundColor: `rgba(255,0,0,0.4)`,
+        stack: 1,
+      }]   
   });
   
   export const composeRadarDataSet = (avgData) => {

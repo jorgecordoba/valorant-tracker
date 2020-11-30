@@ -1,7 +1,7 @@
 import Head from 'next/head'
 import styles from '../styles/Home.module.css'
 import {composeAvgData, composeBodyshotGraph, composeHeadshotGraph, composeKdaGraph, composeLegshotGraph, 
-  composeRadarDataSet, composeAvgDataSet, composeKdaDetailDataSet} from '../utils/calculations'
+  composeRadarDataSet, composeAvgDataSet, composeFireDetailDataSet, composeFirstBloodsDeathsDataSet} from '../utils/calculations'
 import {LineGraph} from '../components/linegraph'
 import { BarGraph } from '../components/bargraph';
 import { GroupedBarGraph } from '../components/groupedbargraph';
@@ -64,7 +64,8 @@ export default function Home(props) {
 
         <StatsTable data={props.avgData} />
 
-        <GroupedBarGraph data={composeKdaDetailDataSet(props.avgData, p => p.headshots, p => p.bodyshots, p => p.legshots)} />
+        <GroupedBarGraph data={composeFireDetailDataSet(props.avgData, p => p.headshots, p => p.bodyshots, p => p.legshots)} />
+        <GroupedBarGraph data={composeFirstBloodsDeathsDataSet(props.avgData, p => p.firstBloods, p => p.deathsFirst)} />
 
         </div>
       </main>
