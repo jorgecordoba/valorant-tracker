@@ -1,5 +1,6 @@
 import React from "react";
 import { useSortBy, useTable } from 'react-table'
+import styles from '../styles/Home.module.css'
 
 export const StatsTable = (props) => {
     const filteredData = props.data.filter(p => !p.hidden)
@@ -40,8 +41,8 @@ export const StatsTable = (props) => {
         }, useSortBy)
 
     return (
-    <div style={{width: '30vw', height: '400px', margin: '2%'}}>
-    <table {...getTableProps()} style={{ border: 'solid 1px black', borderSpacing: 0, width: '80%', margin: 'auto' }}>
+    <div className={styles.card}>
+    <table {...getTableProps()} style={{ border: 'solid 1px black', borderSpacing: 0, margin: 'auto' }}>
               <thead>
                 {headerGroups.map(headerGroup => (
                   <tr {...headerGroup.getHeaderGroupProps()} style={{ border: 'solid 1px black' }}>
