@@ -52,11 +52,12 @@ const getKda = (profile, dateOffset) => {
     const avgEconRating = econRating / profileMatches.length;
    
     const sumScorePerRound = profileMatches.reduce((current, match) => match.segments[0].stats.scorePerRound.value + current, 0);
-    const avgScorePerRound = sumScorePerRound / profileMatches.length;
+    const avgScorePerRound = sumScorePerRound / profileMatches.length;    
   
     const nmatches = profileMatches.length;
+    const hidden = profile.hidden
   
-    return {name, rgb, avgKda, avgScore, avgEconRating, avgScorePerRound, nmatches};
+    return {name, rgb, avgKda, avgScore, avgEconRating, avgScorePerRound, nmatches, hidden};
   }  
 
   const composePlayerDataSet = (profile, func) => {
@@ -82,6 +83,7 @@ const getKda = (profile, dateOffset) => {
       pointRadius: 1,
       pointHitRadius: 10,
       spanGaps: true,
+      hidden: profile.hidden,
       data: [func(profile,-9), func(profile,-8), func(profile,-7), func(profile,-6), func(profile,-5), func(profile,-4), func(profile,-3), func(profile,-2), func(profile,-1), func(profile,0)]
     }
     )
@@ -147,23 +149,24 @@ const getKda = (profile, dateOffset) => {
   );
   
   export const composeAvgDataSet = (avgData, label, mapFunc) => ({ 
-    labels: avgData.map(m => m.name),
+    labels: avgData.filter(p => !p.hidden).map(m => m.name),
     datasets: [{
       label,
-      data: avgData.map(mapFunc),
-      backgroundColor: avgData.map(m =>`rgba(${m.rgb.r},${m.rgb.g},${m.rgb.b},0.4)`),
-      borderColor: avgData.map(m =>`rgba(${m.rgb.r},${m.rgb.g},${m.rgb.b},1)`),
-      borderWidth: 1,
+      data: avgData.filter(p => !p.hidden).map(mapFunc),
+      backgroundColor: avgData.filter(p => !p.hidden).map(m =>`rgba(${m.rgb.r},${m.rgb.g},${m.rgb.b},0.4)`),
+      borderColor: avgData.filter(p => !p.hidden).map(m =>`rgba(${m.rgb.r},${m.rgb.g},${m.rgb.b},1)`),
+      borderWidth: 1,      
     }] 
   });
   
   export const composeRadarDataSet = (avgData) => {
-    const maxEcon = Math.max.apply(Math, avgData.map(function(o) { return o.avgEconRating; }))  
-    const maxKda = Math.max.apply(Math, avgData.map(function(o) { return o.avgKda; }))
-    const maxScore = Math.max.apply(Math, avgData.map(function(o) { return o.avgScore; }))
-    const maxScorePerRound = Math.max.apply(Math, avgData.map(function(o) { return o.avgScorePerRound; }))
+    const filteredData = avgData.filter(p => !p.hidden)
+    const maxEcon = Math.max.apply(Math, filteredData.map(function(o) { return o.avgEconRating; }))  
+    const maxKda = Math.max.apply(Math, filteredData.map(function(o) { return o.avgKda; }))
+    const maxScore = Math.max.apply(Math, filteredData.map(function(o) { return o.avgScore; }))
+    const maxScorePerRound = Math.max.apply(Math, filteredData.map(function(o) { return o.avgScorePerRound; }))
   
-    const radars = avgData.map(p => ({
+    const radars = filteredData.map(p => ({
       labels: ['Econ Rating', 'KDA', 'Score', 'Score per Round'],
       datasets: [{
         label: p.name,

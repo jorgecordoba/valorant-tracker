@@ -2,6 +2,7 @@ import React from "react";
 import { useSortBy, useTable } from 'react-table'
 
 export const StatsTable = (props) => {
+    const filteredData = props.data.filter(p => !p.hidden)
     const {
         getTableProps,
         getTableBodyProps,
@@ -32,7 +33,7 @@ export const StatsTable = (props) => {
               sortType: 'basic'
             }
           ], []),
-          data: React.useMemo(() => props.data, []),
+          data: React.useMemo(() => filteredData, []),
           initialState: {
             sortBy: [{ id: 'avgKda', desc: true }]
           }

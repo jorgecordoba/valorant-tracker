@@ -41,42 +41,50 @@ export async function getProfiles() {
     {
       name: "Broker All",
       rgb: randomRGB(),
-      players: [broker, neuras, ikeric]
-    },
-    {
-      name: "Broker",
-      rgb: randomRGB(),
-      players: [broker]
-    },
-    {
-      name: "Neuras",
-      rgb: randomRGB(),
-      players: [neuras]
-    },
-    {
-      name: "Ikeric",
-      rgb: randomRGB(),
-      players: [ikeric]
-    },
+      players: [broker, neuras, ikeric],
+      hidden: false
+    },    
     {
       name: "Zehcnas",
       rgb: randomRGB(),
-      players: [zeki]
+      players: [zeki],
+      hidden: false
     },
     {
       name: "Chaos",
       rgb: randomRGB(),
-      players: [chaos]
+      players: [chaos],
+      hidden: false
     },
     {
       name: "Wallux",
       rgb: randomRGB(),
-      players: [wallux]
+      players: [wallux],
+      hidden: false
     },
     {
       name: "Iskes",
       rgb: randomRGB(),
-      players: [iskes]
+      players: [iskes],
+      hidden: true
+    },
+    {
+      name: "Broker",
+      rgb: randomRGB(),
+      players: [broker],
+      hidden: true
+    },
+    {
+      name: "Neuras",
+      rgb: randomRGB(),
+      players: [neuras],
+      hidden: true
+    },
+    {
+      name: "Ikeric",
+      rgb: randomRGB(),
+      players: [ikeric],
+      hidden: true
     },
   ];
 
