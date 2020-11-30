@@ -9,7 +9,7 @@ function isInRangeMatch(match, from, to) {
     const matchMoment = moment(match.metadata.timestamp)
     return matchMoment.isBetween(from, to);
   }
-  return false;  
+  return false; 
 }
 
 function isSameDayMatch(match, daysOffset) {  
@@ -37,7 +37,7 @@ const getKda = (profile, dateOffset) => {
   
     const name = profile.name;
     const rgb = profile.rgb;
-  
+
     const profilePlayers = profile.players.filter(p => p !== undefined && p.matches !== undefined);
     const profileMatches = profilePlayers.map(p => p.matches)
       .flat().filter(match => isCompetitiveMatch(match));
@@ -55,8 +55,16 @@ const getKda = (profile, dateOffset) => {
     const avgScorePerRound = sumScorePerRound / profileMatches.length;
   
     const nmatches = profileMatches.length;
-  
-    return {name, rgb, avgKda, avgScore, avgEconRating, avgScorePerRound, nmatches};
+
+    const head = profileMatches.reduce((current, match) => match.segments[0].stats.dealtHeadshots.value + current, 0);
+    const body = profileMatches.reduce((current, match) => match.segments[0].stats.dealtBodyshots.value + current, 0);
+    const legs = profileMatches.reduce((current, match) => match.segments[0].stats.dealtLegshots.value + current, 0);
+    const totalShots = head + body + legs;
+    const headshots = head * 100 / totalShots
+    const bodyshots = body * 100 / totalShots
+    const legshots = legs * 100 / totalShots  
+
+    return {name, rgb, avgKda, avgScore, avgEconRating, avgScorePerRound, nmatches, headshots, legshots, bodyshots};
   }  
 
   const composePlayerDataSet = (profile, func) => {
@@ -88,7 +96,14 @@ const getKda = (profile, dateOffset) => {
   }  
   
   const getLabels = () => {
-    return ['-9', '-8', '-7', '-6', '-5', '-4', '-3', '-2', '-1', 'Today']
+    
+    const numdays = 10;
+    const labels = []
+    for (let index = numdays - 1; index >= 0; index--) {     
+      index == 0 ? labels.push('Today') : labels.push(`-${index}`)      
+    }
+
+    return labels
   }
   
   const composePlayerAccuracy = (profile, dateOffset) => {
@@ -155,6 +170,29 @@ const getKda = (profile, dateOffset) => {
       borderColor: avgData.map(m =>`rgba(${m.rgb.r},${m.rgb.g},${m.rgb.b},1)`),
       borderWidth: 1,
     }] 
+  });
+
+  export const composeKdaDetailDataSet = (avgData, headFunc, bodyFunc, legsFunc) => ({ 
+    labels: avgData.map(m => m.name),
+    datasets: [
+      {
+        label: 'Legshot',
+        data: avgData.map(legsFunc),
+        backgroundColor: `rgba(20,144,255,0.4)`,
+        stack: 1,
+      },     
+      {
+        label: 'Bodyshot',
+        data: avgData.map(bodyFunc),
+        backgroundColor: `rgba(255,0,0,0.4)`,
+        stack: 1,
+      },
+      {
+        label: 'Headshot',
+        data: avgData.map(headFunc),
+        backgroundColor: `rgba(34,139,34,0.4)`,
+        stack: 1,
+      }]    
   });
   
   export const composeRadarDataSet = (avgData) => {

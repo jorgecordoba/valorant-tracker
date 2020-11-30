@@ -1,8 +1,10 @@
 import Head from 'next/head'
 import styles from '../styles/Home.module.css'
-import {composeAvgData, composeBodyshotGraph, composeHeadshotGraph, composeKdaGraph, composeLegshotGraph, composeRadarDataSet, composeAvgDataSet} from '../utils/calculations'
+import {composeAvgData, composeBodyshotGraph, composeHeadshotGraph, composeKdaGraph, composeLegshotGraph, 
+  composeRadarDataSet, composeAvgDataSet, composeKdaDetailDataSet} from '../utils/calculations'
 import {LineGraph} from '../components/linegraph'
 import { BarGraph } from '../components/bargraph';
+import { GroupedBarGraph } from '../components/groupedbargraph';
 import { RadarGraph } from '../components/radargraph';
 import {getProfiles} from '../utils/dataLayer'
 import { StatsTable } from '../components/statsTable';
@@ -61,6 +63,8 @@ export default function Home(props) {
         {composeRadarDataSet(props.avgData).map(p => (<RadarGraph key={p.datasets[0].label} data={p} />))}            
 
         <StatsTable data={props.avgData} />
+
+        <GroupedBarGraph data={composeKdaDetailDataSet(props.avgData, p => p.headshots, p => p.bodyshots, p => p.legshots)} />
 
         </div>
       </main>
