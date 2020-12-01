@@ -10,6 +10,7 @@ export const RadarGraph = (props) => {
                                 display: false
                               },
                               ticks: {
+                                max: 100,
                                 suggestedMin: 60,
                                 suggestedMax: 100
                               }

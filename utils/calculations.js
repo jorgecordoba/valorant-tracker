@@ -40,9 +40,7 @@ const getKda = (profile, dateOffset) => {
 
     const profilePlayers = profile.players.filter(p => p !== undefined && p.matches !== undefined);
     const profileMatches = profilePlayers.map(p => p.matches)
-      .flat().filter(match => isCompetitiveMatch(match));
-      
-    
+      .flat().filter(match => isCompetitiveMatch(match));         
 
     const sumKda = profileMatches.reduce((current, match) => match.segments[0].stats.kdRatio.value + current, 0);
     const avgKda = (sumKda / profileMatches.length).toFixed(2);
@@ -71,9 +69,23 @@ const getKda = (profile, dateOffset) => {
     const firstBloods = profileMatches.reduce((current, match) => match.segments[0].stats.firstBloods.value + current, 0);
     const deathsFirst = profileMatches.reduce((current, match) => match.segments[0].stats.deathsFirst.value + current, 0) * -1;
 
-    const average = {name, rgb, avgKda, avgScore, avgEconRating, avgScorePerRound, nmatches, hidden, headshots, legshots, bodyshots, firstBloods, deathsFirst};
+    const agents = []
+    profileMatches.reduce((current, match) => {
+      const agent = match.metadata.agent
+      const agentName = match.metadata.agentName
+      const scorePerRound =  match.segments[0].stats.scorePerRound.value
+      if (!current[agent]) {
+        current[agent] = { agentName: agentName, numPlayed: 0, addedScorePerRound: 0, profileName: profile.name };
+        agents.push(current[agent])
+      }
+      current[agent].numPlayed += 1;
+      current[agent].addedScorePerRound =  current[agent].addedScorePerRound + scorePerRound
+      return current;
+      }, {});      
 
-    console.log(JSON.stringify(average));
+    const average = {name, rgb, avgKda, avgScore, avgEconRating, avgScorePerRound, nmatches, hidden, headshots, legshots, bodyshots, firstBloods, deathsFirst, agents};
+
+    console.log(JSON.stringify(agents))
 
     return average;
   }  
@@ -243,5 +255,51 @@ const getKda = (profile, dateOffset) => {
       }]
       })
     )
+    return radars;
+  };
+
+  export const composeAgentsRadarDataSet = (avgData) => {
+  
+    const filteredData = avgData.filter(p => !p.hidden)
+
+    const agentsData = []
+    filteredData.map(p => p.agents).flat().reduce((current, data) => {
+      const agentName = data.agentName
+      const numPlayed = data.numPlayed
+      const addedScorePerRound = data.addedScorePerRound
+      const name = data.profileName
+      if (!current[agentName]) {
+        current[agentName] = { agentName, profiles: [], maxScorePerRound: 0 };
+        agentsData.push(current[agentName])
+      }
+
+    const average = (addedScorePerRound / numPlayed)
+
+      current[agentName].profiles.push({ name, numPlayed, addedScorePerRound })
+      current[agentName].numPlayed += 1;
+      current[agentName].maxScorePerRound = current[agentName].maxScorePerRound > average ? current[agentName].maxScorePerRound : average
+      return current;
+      }, {}); 
+
+      console.log(JSON.stringify(agentsData))
+
+    const radars = agentsData.map(p => ({
+      labels: filteredData.map(data => data.name),
+      datasets: [{
+        label: p.agentName,
+        backgroundColor: `rgba(20,144,255,0.4)`,
+        data: filteredData.map(data => {
+          let items = p.profiles.filter(profile => profile.name === data.name);
+          let value = 0
+          if (items && items[0]) {      
+            value = (items[0].addedScorePerRound / items[0].numPlayed * 100) / p.maxScorePerRound
+          }
+          return value;
+        }) 
+      }]
+      })
+    )
+    
+    console.log(JSON.stringify(radars))
     return radars;
   };

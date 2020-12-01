@@ -1,7 +1,7 @@
 import Head from 'next/head'
 import styles from '../styles/Home.module.css'
 import {composeAvgData, composeBodyshotGraph, composeHeadshotGraph, composeKdaGraph, composeLegshotGraph, 
-  composeRadarDataSet, composeAvgDataSet, composeFireDetailDataSet, composeFirstBloodsDeathsDataSet} from '../utils/calculations'
+  composeRadarDataSet, composeAgentsRadarDataSet, composeAvgDataSet, composeFireDetailDataSet, composeFirstBloodsDeathsDataSet} from '../utils/calculations'
 import {LineGraph} from '../components/linegraph'
 import { BarGraph } from '../components/bargraph';
 import { GroupedBarGraph } from '../components/groupedbargraph';
@@ -60,12 +60,13 @@ export default function Home(props) {
         <BarGraph data={composeAvgDataSet(props.avgData, "Econ Rating", p => p.avgEconRating)} />
         <BarGraph data={composeAvgDataSet(props.avgData, "KDA", p => p.avgKda)} />
     
-        {composeRadarDataSet(props.avgData).map(p => (<RadarGraph key={p.datasets[0].label} data={p} />))}            
+        {composeRadarDataSet(props.avgData).map(p => (<RadarGraph key={p.datasets[0].label} data={p} />))}
+        {composeAgentsRadarDataSet(props.avgData).map(p => (<RadarGraph key={p.datasets[0].label} data={p} />))}      
 
         <StatsTable data={props.avgData} />
 
         <GroupedBarGraph data={composeFireDetailDataSet(props.avgData, p => p.headshots, p => p.bodyshots, p => p.legshots)} />
-        <GroupedBarGraph data={composeFirstBloodsDeathsDataSet(props.avgData, p => p.firstBloods, p => p.deathsFirst)} />
+        <GroupedBarGraph data={composeFirstBloodsDeathsDataSet(props.avgData, p => p.firstBloods / p.nmatches, p => p.deathsFirst / p.nmatches)} />
 
         </div>
       </main>
