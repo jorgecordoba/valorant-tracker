@@ -40,9 +40,7 @@ const getKda = (profile, dateOffset) => {
 
     const profilePlayers = profile.players.filter(p => p !== undefined && p.matches !== undefined);
     const profileMatches = profilePlayers.map(p => p.matches)
-      .flat().filter(match => isCompetitiveMatch(match));
-      
-    
+      .flat().filter(match => isCompetitiveMatch(match));         
 
     const sumKda = profileMatches.reduce((current, match) => match.segments[0].stats.kdRatio.value + current, 0);
     const avgKda = (sumKda / profileMatches.length).toFixed(2);
@@ -72,8 +70,6 @@ const getKda = (profile, dateOffset) => {
     const deathsFirst = profileMatches.reduce((current, match) => match.segments[0].stats.deathsFirst.value + current, 0) * -1;
 
     const average = {name, rgb, avgKda, avgScore, avgEconRating, avgScorePerRound, nmatches, hidden, headshots, legshots, bodyshots, firstBloods, deathsFirst};
-
-    console.log(JSON.stringify(average));
 
     return average;
   }  
