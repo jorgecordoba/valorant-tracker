@@ -65,7 +65,7 @@ export default function Home(props) {
         <StatsTable data={props.avgData} />
 
         <GroupedBarGraph data={composeFireDetailDataSet(props.avgData, p => p.headshots, p => p.bodyshots, p => p.legshots)} />
-        <GroupedBarGraph data={composeFirstBloodsDeathsDataSet(props.avgData, p => p.firstBloods, p => p.deathsFirst)} />
+        <GroupedBarGraph data={composeFirstBloodsDeathsDataSet(props.avgData, p => p.firstBloods / p.nmatches, p => p.deathsFirst / p.nmatches)} />
 
         </div>
       </main>
