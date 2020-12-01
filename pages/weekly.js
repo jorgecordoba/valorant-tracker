@@ -2,9 +2,26 @@ import Head from 'next/head';
 import styles from '../styles/Home.module.css';
 import axios from 'axios';
 import { LineGraph } from '../components/linegraph'
+import moment from 'moment'
 
-async function getData() {
-    const url = `https://valorant-avg-2.azurewebsites.net/api/GetCalculatedStats?code=nvvFcWjE4vfbFRkFkvbWq3YE8wEcfR5SYhaPsygpw7/i7SbktkmN9g==`
+function startOfWeek(date) {
+    date.setHours(6, 0, 0);
+    const diff = date.getDate() - date.getDay() + 1 - 7;
+    date.setDate(diff);
+    return date.toJSON();
+}
+
+function endOfWeek(date) {
+    date.setHours(6, 0, 0);
+    var diff = date.getDate() - date.getDay() + 8 - 7;
+    date.setDate(diff);
+    return date.toJSON();
+}
+
+async function getData(from, to) {
+    
+    const url = 'https://valorant-avg-2.azurewebsites.net/api/GetMatches?code=molHze/1j3JjruEOj2/xYFZa94rlbadXqGbV1haKL2EAcXyGGwb2XQ==&from=' + from + '&to=' + to;
+    console.log(url);
     const res = await axios.get(url, {
         headers: {
             'Accept': 'application/json'
@@ -14,42 +31,24 @@ async function getData() {
     return res.data[0];
 }
 
-function getYearKdaData(weeklyData) {
-    const data = [];
-    for (var i = 1; i <= 52; i++) {
-        var week = weeklyData.find(x => x.Week == i);
-        if (week) {
-            data.push(week.Kda);
-        } else {
-            data.push(null);
-        }
-    }
-
-    return data;
-}
-
 export async function getStaticProps() {
-    const data = await getData();
-    const labels = [];
-    for(var i = 1; i <= 52; i++) {
-        labels.push(i);
-    }
+    const from = startOfWeek(new Date());
+    const to = endOfWeek(new Date());
+    const data = await getData(from, to);
+    
+    const monMatches = data.map(m => moment(m.Metadata.Timestamp) < moment(from).add(1, 'days'));
+    const tueMatches = data.map(m => moment(m.Metadata.Timestamp) < moment(from).add(2, 'days'));
+    const wedMatches = data.map(m => moment(m.Metadata.Timestamp) < moment(from).add(3, 'days'));
+    const thuMatches = data.map(m => moment(m.Metadata.Timestamp) < moment(from).add(4, 'days'));
+    const friMatches = data.map(m => moment(m.Metadata.Timestamp) < moment(from).add(5, 'days'));
+    const satMatches = data.map(m => moment(m.Metadata.Timestamp) < moment(from).add(6, 'days'));
+    const sunMatches = data.map(m => moment(m.Metadata.Timestamp) < moment(from).add(7, 'days'));
 
-    const weeklyKda = {
-        labels: labels,
-        datasets: data.Stats.map(player => {
-            return {
-                label: player.Name,
-                fill: false,
-                data: getYearKdaData(player.Weekly)
-            }
-        })
-    }
+    
 
     return {
         props: {
-            data,
-            weeklyKda
+            data
         },
         revalidate: 100
     }
@@ -67,14 +66,6 @@ export default function Home(props) {
                 <h1 className={styles.title}>
                     Weekly Stats
                 </h1>
-
-                <div className={styles.grid}>
-                    <LineGraph 
-                    data={props.weeklyKda} 
-                    title='KDA Ratio' 
-                    width={900}
-                    />
-                </div>
             </main>
         </div>
     )
