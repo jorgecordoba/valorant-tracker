@@ -45,16 +45,16 @@ const getKda = (profile, dateOffset) => {
     
 
     const sumKda = profileMatches.reduce((current, match) => match.segments[0].stats.kdRatio.value + current, 0);
-    const avgKda = sumKda / profileMatches.length
+    const avgKda = (sumKda / profileMatches.length).toFixed(2);
   
     const sumScore = profileMatches.reduce((current, match) => match.segments[0].stats.score.value + current, 0);
-    const avgScore = sumScore / profileMatches.length;
+    const avgScore = (sumScore / profileMatches.length).toFixed(2);
   
     const econRating = profileMatches.reduce((current, match) => match.segments[0].stats.econRating.value + current, 0);
-    const avgEconRating = econRating / profileMatches.length;
+    const avgEconRating = (econRating / profileMatches.length).toFixed(2);
    
     const sumScorePerRound = profileMatches.reduce((current, match) => match.segments[0].stats.scorePerRound.value + current, 0);
-    const avgScorePerRound = sumScorePerRound / profileMatches.length;    
+    const avgScorePerRound = (sumScorePerRound / profileMatches.length).toFixed(2);    
   
     const nmatches = profileMatches.length;
 
@@ -64,9 +64,9 @@ const getKda = (profile, dateOffset) => {
     const body = profileMatches.reduce((current, match) => match.segments[0].stats.dealtBodyshots.value + current, 0);
     const legs = profileMatches.reduce((current, match) => match.segments[0].stats.dealtLegshots.value + current, 0);
     const totalShots = head + body + legs;
-    const headshots = head * 100 / totalShots
-    const bodyshots = body * 100 / totalShots
-    const legshots = legs * 100 / totalShots  
+    const headshots = (head * 100 / totalShots).toFixed(2);
+    const bodyshots = (body * 100 / totalShots).toFixed(2);
+    const legshots = (legs * 100 / totalShots).toFixed(2);
 
     const firstBloods = profileMatches.reduce((current, match) => match.segments[0].stats.firstBloods.value + current, 0);
     const deathsFirst = profileMatches.reduce((current, match) => match.segments[0].stats.deathsFirst.value + current, 0) * -1;

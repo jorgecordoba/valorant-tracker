@@ -1,8 +1,9 @@
 import {Line} from 'react-chartjs-2';
+import styles from '../styles/Home.module.css'
 
 export const LineGraph = (props) => {
     return (
-        <div style={{width: '30vw', height: '400px', margin: '2%'}}>
+        <div className={styles.card}>
         <Line
           data={props.data}
           height={null}
