@@ -3,8 +3,8 @@ import { useSortBy, useTable } from 'react-table'
 import styles from '../styles/Home.module.css'
 
 export const StatsTable = (props) => {
-    const filteredData = props.data.filter(p => !p.hidden)
-    const {
+    let filteredData = props.data.filter(p => !p.hidden)
+    let {
         getTableProps,
         getTableBodyProps,
         headerGroups,
@@ -19,8 +19,13 @@ export const StatsTable = (props) => {
               sortType: 'basic'
             },
             {
-              Header: 'KDA Average',
+              Header: 'KDA Avg',
               accessor: 'avgKda',
+              sortType: 'basic'
+            },
+            {
+              Header: 'Kda Dev',
+              accessor: 'kdaStandardDev',
               sortType: 'basic'
             },
             {
@@ -34,7 +39,7 @@ export const StatsTable = (props) => {
               sortType: 'basic'
             }
           ], []),
-          data: React.useMemo(() => filteredData, []),
+          data: React.useMemo(() => filteredData, filteredData),
           initialState: {
             sortBy: [{ id: 'avgKda', desc: true }]
           }

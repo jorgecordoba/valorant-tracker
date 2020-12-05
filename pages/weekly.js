@@ -110,8 +110,6 @@ export async function getStaticProps() {
         })
     };
 
-     console.log(ks);
-
     return {
         props: {
             kda,
