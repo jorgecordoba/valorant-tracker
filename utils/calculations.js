@@ -116,9 +116,8 @@ const getKda = (profile, dateOffset) => {
     )
   }  
   
-  const getLabels = () => {
+  const getLabels = (numdays) => {
     
-    const numdays = 10;
     const labels = []
     for (let index = numdays - 1; index >= 0; index--) {     
       index == 0 ? labels.push('Today') : labels.push(`-${index}`)      
@@ -149,7 +148,7 @@ const getKda = (profile, dateOffset) => {
 
   export const composeKdaGraph = (players) => {
     const data = {
-      labels: getLabels(),
+      labels: getLabels(10),
       datasets: players.map( player => composePlayerDataSet(player, (p, o) => getKda(p,o))
       )
     };
@@ -158,7 +157,7 @@ const getKda = (profile, dateOffset) => {
   
   export const composeHeadshotGraph = (players) => {
     const data = {
-      labels: getLabels(),
+      labels: getLabels(10),
       datasets: players.map( player => composePlayerDataSet(player, (p,o) => composePlayerAccuracy(p, o).pHeadshots)
       )
     };
@@ -167,7 +166,7 @@ const getKda = (profile, dateOffset) => {
   
   export const composeBodyshotGraph = (players) => {
     const data = {
-      labels: getLabels(),
+      labels: getLabels(10),
       datasets: players.map( player => composePlayerDataSet(player, (p,o) => composePlayerAccuracy(p, o).pBodyshots)
       )
     };
@@ -176,7 +175,7 @@ const getKda = (profile, dateOffset) => {
   
   export const composeLegshotGraph = (players) => (
     {
-      labels: getLabels(),
+      labels: getLabels(10),
       datasets: players.map( player => composePlayerDataSet(player, (p,o) => composePlayerAccuracy(p, o).pLegshots)
       )
     }

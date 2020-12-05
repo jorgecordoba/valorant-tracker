@@ -14,8 +14,6 @@ import moment from 'moment-timezone';
 import { getProfiles } from '../utils/dataLayer';
 import axios from 'axios';
 import LoadingOverlay from 'react-loading-overlay'
-import BounceLoader from 'react-spinners/BounceLoader'
-import { useRouter } from 'next/router'
 
 export async function getApiData(dateStart, dateEnd) {
   var full = location.protocol+'//'+location.hostname+(location.port ? ':'+location.port: '');
@@ -53,7 +51,7 @@ async function getData(dateStart, dateEnd, func) {
 
 export async function getStaticProps() {
 
-  const dateStart = moment().tz('Europe/Madrid').startOf('day').add(-4, 'days')
+  const dateStart = moment().tz('Europe/Madrid').startOf('day').add(-12, 'days')
   const dateEnd = moment().tz('Europe/Madrid').startOf('day')
   const props = await getData(dateStart, dateEnd, getProfiles)
 
@@ -68,7 +66,7 @@ export async function getStaticProps() {
 
 export default function Home(props) {  
 
-  const [startDate, setStartDate] = useState(new Date(new Date().setDate(new Date().getDate()-6)));
+  const [startDate, setStartDate] = useState(new Date(new Date().setDate(new Date().getDate()-12)));
   const [endDate, setEndDate] = useState(new Date());
   const [data, setData] = useState(props)
   const [active, setActive] = useState(false)
