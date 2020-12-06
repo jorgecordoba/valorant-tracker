@@ -71,9 +71,9 @@ export async function getPlayerDataFromTracker(player, dateStart, dateEnd) {
       },
   
     })
-    let data = await transformData(res.data.data)
-    data = data.filter(p => moment(p.date).isAfter(dateStart))
-    data = data.filter(p => moment(p.date).isBefore(dateEnd))
+    let data = await transformData(res.data.data) 
+    data = data.filter(p => moment(p.date).isSameOrAfter(dateStart, 'day'))
+    data = data.filter(p => moment(p.date).isSameOrBefore(dateEnd, 'day'))
     return data
 }
 

@@ -70,7 +70,7 @@ export default function Home(props) {
   const [endDate, setEndDate] = useState(new Date());
   const [data, setData] = useState(props)
   const [active, setActive] = useState(false)
-  const onChange = (basePath) => {
+  const onChange = () => {
       setActive(true);
       getData(startDate,endDate, getApiData).then(p => {setData(p);setActive(false)})
     }
@@ -99,16 +99,19 @@ export default function Home(props) {
             Start: 
           <DatePicker 
             selected={startDate}
-            onChange={(start) => {setStartDate(start); onChange();}}
+            onChange={(start) => setStartDate(start)}
             startDate={startDate}
              /></div>
           <div>End: 
             <DatePicker
               selected={endDate}
-              onChange={(end) => { setEndDate(end); onChange();}}
+              onChange={(end) => setEndDate(end)}
               endDate={endDate}
               />
             </div>
+          <div>
+          <button type="button" onClick={p => onChange()}>Apply</button>
+          </div>
           </div>
 
       <div className={styles.grid}>

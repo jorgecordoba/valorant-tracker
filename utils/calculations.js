@@ -64,8 +64,8 @@ const getKda = (profile, dateOffset) => {
     const bodyshots = (body * 100 / totalShots).toFixed(2);
     const legshots = (legs * 100 / totalShots).toFixed(2);
 
-    const firstBloods = profileMatches.reduce((current, match) => match.FirstBloods.value + current, 0);
-    const deathsFirst = profileMatches.reduce((current, match) => match.DeathsFirst.value + current, 0) * -1;
+    const firstBloods = profileMatches.reduce((current, match) => match.FirstBloods + current, 0);
+    const deathsFirst = profileMatches.reduce((current, match) => match.DeathsFirst + current, 0) * -1;
 
     const agents = []
   
@@ -87,7 +87,7 @@ const getKda = (profile, dateOffset) => {
     return average;
   }  
 
-  const composePlayerDataSet = (profile, func) => {
+  const composePlayerDataSet = (profile, labels, func) => {
 
     return (
     {
@@ -111,7 +111,7 @@ const getKda = (profile, dateOffset) => {
       pointHitRadius: 10,
       spanGaps: true,
       hidden: profile.hidden,
-      data: [func(profile,-9), func(profile,-8), func(profile,-7), func(profile,-6), func(profile,-5), func(profile,-4), func(profile,-3), func(profile,-2), func(profile,-1), func(profile,0)]
+      data: labels.map(p => func(profile,p))
     }
     )
   }  
@@ -147,39 +147,45 @@ const getKda = (profile, dateOffset) => {
   }
 
   export const composeKdaGraph = (players) => {
+    const labels = getLabels(20)
     const data = {
-      labels: getLabels(10),
-      datasets: players.map( player => composePlayerDataSet(player, (p, o) => getKda(p,o))
+      labels,
+      datasets: players.map( player => composePlayerDataSet(player, labels, (p, o) => getKda(p,o))
       )
     };
     return data  
   }
   
   export const composeHeadshotGraph = (players) => {
+    const labels = getLabels(20)
     const data = {
-      labels: getLabels(10),
-      datasets: players.map( player => composePlayerDataSet(player, (p,o) => composePlayerAccuracy(p, o).pHeadshots)
+      labels,
+      datasets: players.map( player => composePlayerDataSet(player, labels,(p,o) => composePlayerAccuracy(p, o).pHeadshots)
       )
     };
     return data 
   }
   
   export const composeBodyshotGraph = (players) => {
+    const labels = getLabels(20)
     const data = {
-      labels: getLabels(10),
-      datasets: players.map( player => composePlayerDataSet(player, (p,o) => composePlayerAccuracy(p, o).pBodyshots)
+      labels,
+      datasets: players.map( player => composePlayerDataSet(player, labels, (p,o) => composePlayerAccuracy(p, o).pBodyshots)
       )
     };
     return data 
   }
   
-  export const composeLegshotGraph = (players) => (
-    {
-      labels: getLabels(10),
-      datasets: players.map( player => composePlayerDataSet(player, (p,o) => composePlayerAccuracy(p, o).pLegshots)
+  export const composeLegshotGraph = (players) => {
+
+    const labels = getLabels(20)
+    const data = {
+      labels,
+      datasets: players.map( player => composePlayerDataSet(player, labels, (p,o) => composePlayerAccuracy(p, o).pLegshots)
       )
     }
-  );
+    return data
+  }
   
   export const composeAvgDataSet = (avgData, label, mapFunc) => ({ 
     labels: avgData.filter(p => !p.hidden).map(m => m.name),
