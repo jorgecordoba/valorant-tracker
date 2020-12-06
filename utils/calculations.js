@@ -10,10 +10,9 @@ function isInRangeMatch(match, from, to) {
 
 function isSameDayMatch(match, daysOffset) {  
   if (match !== undefined) {
-    const offsetDay = moment().tz('Europe/Madrid').startOf('day').tz('Europe/Madrid').add(daysOffset, 'days').tz('Europe/Madrid')
-    const matchDay= moment(match.date).tz('Europe/Madrid').startOf('day').tz('Europe/Madrid')
+    const matchDay= moment(match.date).tz('Europe/Madrid')
     
-    return offsetDay.isSame(matchDay)
+    return matchDay.isSame(moment(daysOffset), 'day')
   }
   return false;  
 }
@@ -116,11 +115,11 @@ const getKda = (profile, dateOffset) => {
     )
   }  
   
-  const getLabels = (numdays) => {
-    
+  const getLabels = (startDate, endDate) => {
+    const numdays = moment(endDate).diff(startDate, 'days')
     const labels = []
-    for (let index = numdays - 1; index >= 0; index--) {     
-      index == 0 ? labels.push('Today') : labels.push(`-${index}`)      
+    for (let index = 0; index < numdays+1; index++) {
+      labels.push(moment(startDate).add(index,'days').format('YYYY-MM-DD'))
     }
 
     return labels
@@ -147,7 +146,7 @@ const getKda = (profile, dateOffset) => {
   }
 
   export const composeKdaGraph = (players) => {
-    const labels = getLabels(20)
+    const labels = getLabels(players[0].dateStart, players[0].dateEnd)
     const data = {
       labels,
       datasets: players.map( player => composePlayerDataSet(player, labels, (p, o) => getKda(p,o))
@@ -157,7 +156,7 @@ const getKda = (profile, dateOffset) => {
   }
   
   export const composeHeadshotGraph = (players) => {
-    const labels = getLabels(20)
+    const labels = getLabels(players[0].dateStart, players[0].dateEnd)
     const data = {
       labels,
       datasets: players.map( player => composePlayerDataSet(player, labels,(p,o) => composePlayerAccuracy(p, o).pHeadshots)
@@ -167,7 +166,7 @@ const getKda = (profile, dateOffset) => {
   }
   
   export const composeBodyshotGraph = (players) => {
-    const labels = getLabels(20)
+    const labels = getLabels(players[0].dateStart, players[0].dateEnd)
     const data = {
       labels,
       datasets: players.map( player => composePlayerDataSet(player, labels, (p,o) => composePlayerAccuracy(p, o).pBodyshots)
@@ -178,7 +177,7 @@ const getKda = (profile, dateOffset) => {
   
   export const composeLegshotGraph = (players) => {
 
-    const labels = getLabels(20)
+    const labels = getLabels(players[0].dateStart, players[0].dateEnd)
     const data = {
       labels,
       datasets: players.map( player => composePlayerDataSet(player, labels, (p,o) => composePlayerAccuracy(p, o).pLegshots)

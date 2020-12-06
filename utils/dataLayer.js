@@ -99,49 +99,65 @@ export async function getProfiles(dateStart, dateEnd) {
       name: "Broker All",
       rgb: brokerColors,
       players: [broker, neuras, ikeric],
-      hidden: false
+      hidden: false,
+      dateStart,
+      dateEnd
     },    
     {
       name: "Zehcnas",
       rgb: zekiColors,
       players: [zeki],
-      hidden: false
+      hidden: false,
+      dateStart,
+      dateEnd
     },
     {
       name: "Chaos",
       rgb: chaosColors,
       players: [chaos],
-      hidden: false
+      hidden: false,
+      dateStart,
+      dateEnd
     },
     {
       name: "Wallux",
       rgb: weillyColors,
       players: [wallux],
-      hidden: false
+      hidden: false,
+      dateStart,
+      dateEnd
     },
     {
       name: "Iskes",
       rgb: iskesColors,
       players: [iskes],
-      hidden: true
+      hidden: true,
+      dateStart,
+      dateEnd
     },
     {
       name: "Broker",
       rgb: randomRGB(),
       players: [broker],
-      hidden: true
+      hidden: true,
+      dateStart,
+      dateEnd
     },
     {
       name: "Neuras",
       rgb: randomRGB(),
       players: [neuras],
-      hidden: true
+      hidden: true,
+      dateStart,
+      dateEnd
     },
     {
       name: "Ikeric",
       rgb: randomRGB(),
       players: [ikeric],
-      hidden: true
+      hidden: true,
+      dateStart,
+      dateEnd
     },
   ];
 
