@@ -7,6 +7,18 @@ const zekiColors= {r: 227, g: 196, b:59}
 const weillyColors= {r: 227, g: 59, b:59}
 const iskesColors= {r: 196, g: 59, b:227}
 
+function mergeAndDeduplicate(origArr, updatingArr) {
+  for(var i = 0, l = origArr.length; i < l; i++) {
+    for(var j = 0, ll = updatingArr.length; j < ll; j++) {
+        if(origArr[i].date === updatingArr[j].date) {
+            origArr.splice(i, 1, updatingArr[j]);
+            break;
+        }
+    }
+  }
+  return origArr
+}
+
 export function randomRGB() {
     const randomBetween = (min, max) => min + Math.floor(Math.random() * (max - min + 1));
     let r = randomBetween(0,255)
@@ -78,22 +90,32 @@ export async function getPlayerDataFromTracker(player, dateStart, dateEnd) {
 }
 
 export async function getPlayerDataFromCosmos(player, dateStart, dateEnd) {
+  let path = `https://valorant-avg-2.azurewebsites.net/api/GetMatches?code=molHze/1j3JjruEOj2/xYFZa94rlbadXqGbV1haKL2EAcXyGGwb2XQ==&from=${moment(dateStart).format('YYYY-MM-DD')}&to=${moment(dateEnd).format('YYYY-MM-DD')}`
+    const res = await axios.get(path, {
+      headers: {
+        'Accept': 'application/json'
+      },
   
+    })
+
+    let data = res.data.filter(p => p.player == player)
+
+    return data
 }
 
-export async function getPlayerData(player, dateStart, dateEnd) {
-    return getPlayerDataFromTracker(player, dateStart, dateEnd)
+export async function getPlayerData(playerTracker, playerCosmos, dateStart, dateEnd) {
+    return mergeAndDeduplicate(getPlayerDataFromCosmos(playerCosmos, dateStart, dateEnd), getPlayerDataFromTracker(playerTracker, dateStart, dateEnd))
   }
 
 export async function getProfiles(dateStart, dateEnd) {
-  const broker = await getPlayerData('Broker%236969', dateStart, dateEnd)
-  const neuras = await getPlayerData('Neuras%234402', dateStart, dateEnd)
-  const ikeric = await getPlayerData('Ikeric%235421', dateStart, dateEnd)
-  const zeki = await getPlayerData('Zehcnas%23666', dateStart, dateEnd)
-  const chaos = await getPlayerData('%CE%9E%CE%94%CE%9E%20Chaos%23Prime', dateStart, dateEnd)
-  const wallux = await getPlayerData('Wallux%23wal', dateStart, dateEnd)
-  const iskes = await getPlayerData('Iskes%235895', dateStart, dateEnd)
-  
+  const broker = await getPlayerData('Broker%236969', 'Broker#6969', dateStart, dateEnd)
+  const neuras = await getPlayerData('Neuras%234402', 'Neuras#4402', dateStart, dateEnd)
+  const ikeric = await getPlayerData('Ikeric%235421', 'Ikeric#5421', dateStart, dateEnd)
+  const zeki = await getPlayerData('Zehcnas%23666', 'Zehcnas#666', dateStart, dateEnd)
+  const chaos = await getPlayerData('%CE%9E%CE%94%CE%9E%20Chaos%23Prime', 'ΞΔΞ Chaos#Prime', dateStart, dateEnd)
+  const wallux = await getPlayerData('Wallux%23wal', 'Wallux#wal', dateStart, dateEnd)
+  const iskes = await getPlayerData('Iskes%235895', 'Iskes#5895', dateStart, dateEnd)
+
   const profiles = [
     {
       name: "Broker All",
