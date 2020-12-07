@@ -22,7 +22,7 @@ const getKda = (profile, dateOffset) => {
     let profileMatches = profile.players.map(p => p)
       .flat().filter(match => isSameDayMatch(match, dateOffset));
   
-    const sumKda = profileMatches.reduce((current, match) => match.KdRatio + current, 0);
+    const sumKda = profileMatches.reduce((current, match) => match.kdRatio + current, 0);
     const avgKda = sumKda / profileMatches.length
 
     return avgKda;
@@ -37,41 +37,41 @@ const getKda = (profile, dateOffset) => {
     const profileMatches = profilePlayers.map(p => p)
       .flat();         
 
-    const sumKda = profileMatches.reduce((current, match) => match.KdRatio + current, 0);
+    const sumKda = profileMatches.reduce((current, match) => match.kdRatio + current, 0);
     const avgKda = (sumKda / profileMatches.length).toFixed(2);
-    let kdaStandardDev = profileMatches.reduce((current, match) =>  current + ((match.KdRatio - avgKda)**2),0)
+    let kdaStandardDev = profileMatches.reduce((current, match) =>  current + ((match.kdRatio - avgKda)**2),0)
     kdaStandardDev = Math.sqrt(kdaStandardDev / profileMatches.length).toFixed(2)
 
-    const sumScore = profileMatches.reduce((current, match) => match.Score + current, 0);
+    const sumScore = profileMatches.reduce((current, match) => match.score + current, 0);
     const avgScore = (sumScore / profileMatches.length).toFixed(2);
   
-    const econRating = profileMatches.reduce((current, match) => match.EconRating + current, 0);
+    const econRating = profileMatches.reduce((current, match) => match.econRating + current, 0);
     const avgEconRating = (econRating / profileMatches.length).toFixed(2);
    
-    const sumScorePerRound = profileMatches.reduce((current, match) => match.ScorePerRound + current, 0);
+    const sumScorePerRound = profileMatches.reduce((current, match) => match.scorePerRound + current, 0);
     const avgScorePerRound = (sumScorePerRound / profileMatches.length).toFixed(2);    
   
     const nmatches = profileMatches.length;
 
     const hidden = profile.hidden
     
-    const head = profileMatches.reduce((current, match) => match.DealtHeadshots + current, 0);
-    const body = profileMatches.reduce((current, match) => match.DealtBodyshots + current, 0);
-    const legs = profileMatches.reduce((current, match) => match.DealtLegshots + current, 0);
+    const head = profileMatches.reduce((current, match) => match.dealtHeadshots + current, 0);
+    const body = profileMatches.reduce((current, match) => match.dealtBodyshots + current, 0);
+    const legs = profileMatches.reduce((current, match) => match.dealtLegshots + current, 0);
     const totalShots = head + body + legs;
     const headshots = (head * 100 / totalShots).toFixed(2);
     const bodyshots = (body * 100 / totalShots).toFixed(2);
     const legshots = (legs * 100 / totalShots).toFixed(2);
 
-    const firstBloods = profileMatches.reduce((current, match) => match.FirstBloods + current, 0);
-    const deathsFirst = profileMatches.reduce((current, match) => match.DeathsFirst + current, 0) * -1;
+    const firstBloods = profileMatches.reduce((current, match) => match.firstBloods + current, 0);
+    const deathsFirst = profileMatches.reduce((current, match) => match.deathsFirst + current, 0) * -1;
 
     const agents = []
   
     profileMatches.reduce((current, match) => {
       const agent = match.agent
       const agentName = match.agent
-      const scorePerRound =  match.ScorePerRound
+      const scorePerRound =  match.scorePerRound
       if (!current[agent]) {
         current[agent] = { agentName: agentName, numPlayed: 0, addedScorePerRound: 0, profileName: profile.name };
         agents.push(current[agent])
@@ -130,9 +130,9 @@ const getKda = (profile, dateOffset) => {
     const profileMatches = profilePlayers.map(p => p)
       .flat().filter(match => isSameDayMatch(match, dateOffset))
   
-    const headshots = profileMatches.reduce((current, match) => match.DealtHeadshots + current, 0);
-    const bodyshots = profileMatches.reduce((current, match) => match.DealtBodyshots + current, 0);
-    const legshots = profileMatches.reduce((current, match) => match.DealtLegshots + current, 0);
+    const headshots = profileMatches.reduce((current, match) => match.dealtHeadshots + current, 0);
+    const bodyshots = profileMatches.reduce((current, match) => match.dealtBodyshots + current, 0);
+    const legshots = profileMatches.reduce((current, match) => match.dealtLegshots + current, 0);
     const totalShots = headshots + bodyshots + legshots;
     const pHeadshots = headshots * 100 / totalShots
     const pBodyshots = bodyshots * 100 / totalShots
