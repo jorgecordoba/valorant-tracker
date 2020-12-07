@@ -54,7 +54,7 @@ export async function getStaticProps() {
 
   const dateStart = moment().tz('Europe/Madrid').startOf('day').add(-12, 'days')
   const dateEnd = moment().tz('Europe/Madrid').startOf('day')
-  const props = await getData(dateStart, dateEnd, getProfiles)
+  const props = await getData(dateStart.format('YYYY-MM-DD'), dateEnd.format('YYYY-MM-DD'), getProfiles)
 
   return {
     props,
