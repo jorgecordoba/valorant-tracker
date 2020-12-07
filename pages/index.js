@@ -119,8 +119,6 @@ export default function Home(props) {
         <h1 className={styles.title}>
           Welcome to Valorant Tracker
         </h1>
-        
-        <p><a href="/weekly">Weekly Stats</a></p>
 
         <div className={styles.grid}>
           <div>
