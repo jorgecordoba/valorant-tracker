@@ -14,6 +14,7 @@ import moment from 'moment-timezone';
 import { getProfiles } from '../utils/dataLayer';
 import axios from 'axios';
 import LoadingOverlay from 'react-loading-overlay'
+import { useRouter } from 'next/router'
 
 export async function getApiData(dateStart, dateEnd) {
   var full = location.protocol+'//'+location.hostname+(location.port ? ':'+location.port: '');
@@ -66,6 +67,8 @@ export async function getStaticProps() {
 
 export default function Home(props) {  
 
+  const router = useRouter()
+
   const [startDate, setStartDate] = useState(new Date(new Date().setDate(new Date().getDate()-12)));
   const [endDate, setEndDate] = useState(new Date());
   const [data, setData] = useState(props)
@@ -74,6 +77,33 @@ export default function Home(props) {
       setActive(true);
       getData(startDate,endDate, getApiData).then(p => {setData(p);setActive(false)})
     }
+
+    /*
+  let queryStartDate = startDate
+  let queryEndDate = endDate
+
+  if (router.query.startDate)
+    queryStartDate = Date.parse(router.query.startDate)
+  if (router.query.endDate)
+    queryEndDate = Date.parse(router.query.endDate)
+
+  let changed = false
+  if (router.query.startDate && router.query.startDate != startDate){
+    console.log('Change date ' + router.query.startDate)
+    setStartDate(router.query.startDate)
+    changed = true
+  }
+
+  if (router.query.endDate && router.query.endDate != endDate) {
+    setEndDate(router.query.endDate)
+    changed = true
+  }
+
+  if (changed) {
+    onChange()
+  }
+
+  */
 
   return (
     <LoadingOverlay

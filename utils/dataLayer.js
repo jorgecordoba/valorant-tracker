@@ -8,13 +8,10 @@ const weillyColors= {r: 227, g: 59, b:59}
 const iskesColors= {r: 196, g: 59, b:227}
 
 function mergeAndDeduplicate(origArr, updatingArr) {
-  for(var i = 0, l = origArr.length; i < l; i++) {
-    for(var j = 0, ll = updatingArr.length; j < ll; j++) {
-        if(origArr[i].date === updatingArr[j].date) {
-            origArr.splice(i, 1, updatingArr[j]);
-            break;
-        }
-    }
+
+  for (var i = 0; i < updatingArr.length; i++) {
+    if (!origArr.find(p => p.date == updatingArr[i].date))
+      origArr.push(updatingArr[i])
   }
   return origArr
 }
@@ -104,7 +101,7 @@ export async function getPlayerDataFromCosmos(player, dateStart, dateEnd) {
 }
 
 export async function getPlayerData(playerTracker, playerCosmos, dateStart, dateEnd) {
-    return mergeAndDeduplicate(getPlayerDataFromCosmos(playerCosmos, dateStart, dateEnd), getPlayerDataFromTracker(playerTracker, dateStart, dateEnd))
+    return mergeAndDeduplicate(await getPlayerDataFromCosmos(playerCosmos, dateStart, dateEnd), await getPlayerDataFromTracker(playerTracker, dateStart, dateEnd))
   }
 
 export async function getProfiles(dateStart, dateEnd) {
