@@ -67,8 +67,6 @@ export async function getStaticProps() {
 
 export default function Home(props) {  
 
-  const router = useRouter()
-
   const [startDate, setStartDate] = useState(new Date(new Date().setDate(new Date().getDate()-12)));
   const [endDate, setEndDate] = useState(new Date());
   const [data, setData] = useState(props)

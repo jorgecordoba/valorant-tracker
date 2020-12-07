@@ -36,7 +36,7 @@ const getKda = (profile, dateOffset) => {
     const profilePlayers = profile.players.filter(p => p !== undefined);
     const profileMatches = profilePlayers.map(p => p)
       .flat();         
-
+    
     const sumKda = profileMatches.reduce((current, match) => match.kdRatio + current, 0);
     const avgKda = (sumKda / profileMatches.length).toFixed(2);
     let kdaStandardDev = profileMatches.reduce((current, match) =>  current + ((match.kdRatio - avgKda)**2),0)
