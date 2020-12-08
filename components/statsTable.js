@@ -46,7 +46,7 @@ export const StatsTable = (props) => {
         }, useSortBy)
 
     return (
-    <div className={styles.card}>
+    <div className={styles.top}>
     <table {...getTableProps()} style={{ border: 'solid 1px black', borderSpacing: 0, margin: 'auto' }}>
               <thead>
                 {headerGroups.map(headerGroup => (

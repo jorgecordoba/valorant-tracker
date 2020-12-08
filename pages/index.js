@@ -145,6 +145,7 @@ export default function Home(props) {
 
       <div className={styles.grid}>
         <LastMatchTable data={data.lastMatch} />
+        <StatsTable data={data.avgData} />
         <LineGraph data={data.kda} title= 'KDA Ratio' />
         <LineGraph data={data.headshots} title= '% Headshots' />
         <LineGraph data={data.bodyshots} title= '% Bodyshots' />
@@ -157,8 +158,6 @@ export default function Home(props) {
     
         {composeRadarDataSet(data.avgData).map(p => (<RadarGraph key={p.datasets[0].label} data={p} />))}
         {composeAgentsRadarDataSet(data.avgData).map(p => (<RadarGraph key={p.datasets[0].label} data={p} />))}      
-
-        <StatsTable data={data.avgData} />
 
         <GroupedBarGraph data={composeFireDetailDataSet(data.avgData, p => p.headshots, p => p.bodyshots, p => p.legshots)} />
         <GroupedBarGraph data={composeFirstBloodsDeathsDataSet(data.avgData, p => p.firstBloods / p.nmatches, p => p.deathsFirst / p.nmatches)} />
