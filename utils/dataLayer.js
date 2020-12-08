@@ -6,6 +6,7 @@ const chaosColors = { r: 59, g: 227, b: 104 }
 const zekiColors = { r: 227, g: 196, b: 59 }
 const weillyColors = { r: 227, g: 59, b: 59 }
 const iskesColors = { r: 196, g: 59, b: 227 }
+let cosmosResult = null
 
 function mergeAndDeduplicate(origArr, updatingArr) {
 
@@ -87,21 +88,26 @@ export async function getPlayerDataFromTracker(player, dateStart, dateEnd) {
 }
 
 export async function getPlayerDataFromCosmos(player, dateStart, dateEnd) {
-  let path = `https://valorant-avg-2.azurewebsites.net/api/GetCompetitiveMatches?code=JNwPc50O/xMe4f47C1w0etitWGeNzwJtskfCU3Tdh2IoURWGmow55Q==&from=${moment(dateStart).format('YYYY-MM-DD')}&to=${moment(dateEnd).format('YYYY-MM-DD')}`;
-  const res = await axios.get(path, {
-    headers: {
-      'Accept': 'application/json'
-    },
+  if (!cosmosResult) {
+    console.log('Reading from cosmos')
+    let path = `https://valorant-avg-2.azurewebsites.net/api/GetCompetitiveMatches?code=JNwPc50O/xMe4f47C1w0etitWGeNzwJtskfCU3Tdh2IoURWGmow55Q==&from=${moment(dateStart).format('YYYY-MM-DD')}&to=${moment(dateEnd).format('YYYY-MM-DD')}`;
+    const res = await axios.get(path, {
+      headers: {
+        'Accept': 'application/json'
+      },
 
-  })
+    })
+    cosmosResult = res.data
+  }
 
-  let data = res.data.filter(p => p.player == player)
-  return data
+  return cosmosResult.filter(p => p.player == player)
 }
 
 export async function getPlayerData(playerTracker, playerCosmos, dateStart, dateEnd) {
+  let dataFromTracker = await getPlayerDataFromTracker(playerTracker, dateStart, dateEnd)
+  let dataFromCosmos = await getPlayerDataFromCosmos(playerCosmos, dateStart, dateEnd)
 
-  return mergeAndDeduplicate(await getPlayerDataFromCosmos(playerCosmos, dateStart, dateEnd), await getPlayerDataFromTracker(playerTracker, dateStart, dateEnd))
+  return mergeAndDeduplicate(dataFromCosmos, dataFromTracker)
 }
 
 export async function getProfiles(dateStart, dateEnd) {
