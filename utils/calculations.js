@@ -18,7 +18,7 @@ function isSameDayMatch(match, daysOffset) {
 }
 
 const getLastMatchInfo = (profile) => {
-  console.log('treating ' + profile.name)
+
   let profileMatches = profile.players.map(p => p)
       .flat();
 
@@ -39,7 +39,7 @@ const getLastMatchInfo = (profile) => {
   const lastMatchHeadShot = ((lastMatch.dealtHeadshots / totalShots) *100).toFixed(2)
   const lastMatchLegShot = ((lastMatch.dealtLegshots / totalShots) *100).toFixed(2)
 
-  return {name: lastMatch.player, kda: lastMatch.kdRatio, headshots: lastMatchHeadShot, legshots: lastMatchLegShot, result: `${lastMatch.roundsWon} - ${lastMatch.roundsLost}`, score: lastMatch.score, date: lastMatch.date}
+  return {name: lastMatch.player, kda: lastMatch.kdRatio.toFixed(2), headshots: lastMatchHeadShot, legshots: lastMatchLegShot, result: `${lastMatch.roundsWon} - ${lastMatch.roundsLost}`, score: lastMatch.score, date: lastMatch.date}
 }
 
 export const getLastMatchForAllPlayers = (players) => {

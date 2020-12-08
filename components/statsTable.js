@@ -21,22 +21,22 @@ export const StatsTable = (props) => {
             {
               Header: 'KDA Avg',
               accessor: 'avgKda',
-              sortType: 'basic'
+              sortType: 'alphanumeric'
             },
             {
               Header: 'Kda Dev',
               accessor: 'kdaStandardDev',
-              sortType: 'basic'
+              sortType: 'alphanumeric'
             },
             {
               Header: 'Round Average',
               accessor: 'avgScorePerRound',
-              sortType: 'basic'
+              sortType: 'alphanumeric'
             },
             {
               Header: 'Score Average',
               accessor: 'avgScore',
-              sortType: 'basic'
+              sortType: 'alphanumeric'
             }
           ], []),
           data: React.useMemo(() => filteredData, filteredData),

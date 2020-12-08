@@ -24,27 +24,27 @@ export const LastMatchTable = (props) => {
             {
               Header: 'Score',
               accessor: 'score',
-              sortType: 'basic'
+              sortType: 'alphanumeric'
             },
             {
               Header: 'KDA',
               accessor: 'kda',
-              sortType: 'basic'
+              sortType: 'alphanumeric'
             },
             {
               Header: 'Headshots',
               accessor: 'headshots',
-              sortType: 'basic'
+              sortType: 'alphanumeric'
             },
             {
               Header: 'Podología',
               accessor: 'legshots',
-              sortType: 'basic'
+              sortType: 'alphanumeric'
             },
             {
               Header: 'Result',
               accessor: 'result',
-              sortType: 'basic'
+              sortType: 'alphanumeric'
             },
           ], []),
           data: React.useMemo(() => filteredData, filteredData),
