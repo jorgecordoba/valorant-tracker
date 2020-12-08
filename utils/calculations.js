@@ -17,6 +17,35 @@ function isSameDayMatch(match, daysOffset) {
   return false;  
 }
 
+const getLastMatchInfo = (profile) => {
+  console.log('treating ' + profile.name)
+  let profileMatches = profile.players.map(p => p)
+      .flat();
+
+  if (profile.players.length > 1 || profileMatches.length == 0) {
+    return {}
+  }
+
+  let currentDate = profileMatches[0].date
+  let lastMatch = profileMatches[0]
+  for (var i = 0; i < profileMatches.length; i++) {
+    if (!currentDate || moment(profileMatches[i].date).isAfter(currentDate)) {
+      currentDate = profileMatches[i].date
+      lastMatch = profileMatches[i]
+    }
+  }
+
+  const totalShots = lastMatch.dealtHeadshots + lastMatch.dealtBodyshots + lastMatch.dealtLegshots
+  const lastMatchHeadShot = ((lastMatch.dealtHeadshots / totalShots) *100).toFixed(2)
+  const lastMatchLegShot = ((lastMatch.dealtLegshots / totalShots) *100).toFixed(2)
+
+  return {name: lastMatch.player, kda: lastMatch.kdRatio, headshots: lastMatchHeadShot, legshots: lastMatchLegShot, result: `${lastMatch.roundsWon} - ${lastMatch.roundsLost}`, score: lastMatch.score, date: lastMatch.date}
+}
+
+export const getLastMatchForAllPlayers = (players) => {
+  return players.map( p => getLastMatchInfo(p));
+}
+
 const getKda = (profile, dateOffset) => {
 
     let profileMatches = profile.players.map(p => p)

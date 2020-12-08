@@ -1,7 +1,7 @@
 import Head from 'next/head'
 import styles from '../styles/Home.module.css'
 import {composeAvgData, composeBodyshotGraph, composeHeadshotGraph, composeKdaGraph, composeLegshotGraph, 
-  composeRadarDataSet, composeAgentsRadarDataSet, composeAvgDataSet, composeFireDetailDataSet, composeFirstBloodsDeathsDataSet} from '../utils/calculations'
+  composeRadarDataSet, composeAgentsRadarDataSet, composeAvgDataSet, composeFireDetailDataSet, composeFirstBloodsDeathsDataSet, getLastMatchForAllPlayers} from '../utils/calculations'
 import {LineGraph} from '../components/linegraph'
 import { BarGraph } from '../components/bargraph';
 import { GroupedBarGraph } from '../components/groupedbargraph';
@@ -15,6 +15,7 @@ import { getProfiles } from '../utils/dataLayer';
 import axios from 'axios';
 import LoadingOverlay from 'react-loading-overlay'
 import { useRouter } from 'next/router'
+import { LastMatchTable } from '../components/lastMatch';
 
 export async function getApiData(dateStart, dateEnd) {
   var full = location.protocol+'//'+location.hostname+(location.port ? ':'+location.port: '');
@@ -38,6 +39,7 @@ async function getData(dateStart, dateEnd, func) {
   const headshots = composeHeadshotGraph(profiles)
   const bodyshots = composeBodyshotGraph(profiles)
   const legshots = composeLegshotGraph(profiles)
+  const lastMatch = getLastMatchForAllPlayers(profiles)
 
   return (
     {
@@ -45,7 +47,8 @@ async function getData(dateStart, dateEnd, func) {
       headshots,
       bodyshots,
       legshots,
-      avgData
+      avgData,
+      lastMatch
     }
   )
 }
@@ -141,6 +144,7 @@ export default function Home(props) {
           </div>
 
       <div className={styles.grid}>
+        <LastMatchTable data={data.lastMatch} />
         <LineGraph data={data.kda} title= 'KDA Ratio' />
         <LineGraph data={data.headshots} title= '% Headshots' />
         <LineGraph data={data.bodyshots} title= '% Bodyshots' />
