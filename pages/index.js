@@ -16,6 +16,8 @@ import axios from 'axios';
 import LoadingOverlay from 'react-loading-overlay'
 import { useRouter } from 'next/router'
 import { LastMatchTable } from '../components/lastMatch';
+import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
+import 'react-tabs/style/react-tabs.css';
 
 export async function getApiData(dateStart, dateEnd) {
   var full = location.protocol+'//'+location.hostname+(location.port ? ':'+location.port: '');
@@ -112,6 +114,7 @@ export default function Home(props) {
       spinner
       text='Loading...'
     >
+    
     <div className={styles.container}>
       <Head>
         <title>Valorant Tracker</title>
@@ -119,9 +122,9 @@ export default function Home(props) {
       </Head>
 
       <main className={styles.main}>
-        <h1 className={styles.title}>
+        <h3 className={styles.title}>
           Welcome to Valorant Tracker
-        </h1>
+        </h3>
 
         <div className={styles.grid}>
           <div>
@@ -143,26 +146,40 @@ export default function Home(props) {
           </div>
           </div>
 
-      <div className={styles.grid}>
-        <LastMatchTable data={data.lastMatch} />
-        <StatsTable data={data.avgData} />
+      <Tabs>
+        <TabList>
+          <Tab>Main stats</Tab>
+          <Tab>Graphs</Tab>
+          <Tab>Bars & Radars</Tab>
+        </TabList>
+        <TabPanel>
+          <div className={styles.grid}>
+          <LastMatchTable data={data.lastMatch} />
+          <StatsTable data={data.avgData} />
+          <GroupedBarGraph data={composeFireDetailDataSet(data.avgData, p => p.headshots, p => p.bodyshots, p => p.legshots)} />
+          <GroupedBarGraph data={composeFirstBloodsDeathsDataSet(data.avgData, p => p.firstBloods / p.nmatches, p => p.deathsFirst / p.nmatches)} />
+          </div>
+        </TabPanel>
+        <TabPanel>
+        <div className={styles.grid}>
         <LineGraph data={data.kda} title= 'KDA Ratio' />
         <LineGraph data={data.headshots} title= '% Headshots' />
         <LineGraph data={data.bodyshots} title= '% Bodyshots' />
         <LineGraph data={data.legshots} title= '% Podología' />
        
+        </div>
+        </TabPanel>
+
+        <TabPanel>
+        <div className={styles.grid}>
         <BarGraph data={composeAvgDataSet(data.avgData, "Score", p => p.avgScore)} />
         <BarGraph data={composeAvgDataSet(data.avgData, "Score per round", p => p.avgScorePerRound)} />
         <BarGraph data={composeAvgDataSet(data.avgData, "Econ Rating", p => p.avgEconRating)} />
         <BarGraph data={composeAvgDataSet(data.avgData, "KDA", p => p.avgKda)} />
-    
         {composeRadarDataSet(data.avgData).map(p => (<RadarGraph key={p.datasets[0].label} data={p} />))}
-        {composeAgentsRadarDataSet(data.avgData).map(p => (<RadarGraph key={p.datasets[0].label} data={p} />))}      
-
-        <GroupedBarGraph data={composeFireDetailDataSet(data.avgData, p => p.headshots, p => p.bodyshots, p => p.legshots)} />
-        <GroupedBarGraph data={composeFirstBloodsDeathsDataSet(data.avgData, p => p.firstBloods / p.nmatches, p => p.deathsFirst / p.nmatches)} />
-
         </div>
+        </TabPanel>
+        </Tabs>
       </main>
     </div>
     </LoadingOverlay>

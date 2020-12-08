@@ -54,7 +54,7 @@ export const LastMatchTable = (props) => {
         }, useSortBy)
 
     return (
-    <div className={styles.top}>
+    <div className={styles.top}><div style={{textAlign:"center", marginBottom:"1rem"}}>Last Match</div>
     <table {...getTableProps()} style={{ border: 'solid 1px black', borderSpacing: 0, margin: 'auto' }}>
               <thead>
                 {headerGroups.map(headerGroup => (
