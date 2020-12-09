@@ -7,6 +7,8 @@ const zekiColors = { r: 227, g: 196, b: 59 }
 const weillyColors = { r: 227, g: 59, b: 59 }
 const iskesColors = { r: 196, g: 59, b: 227 }
 let cosmosResult = null
+let cosmosStartDate = null
+let cosmosEndDate = null
 
 function mergeAndDeduplicate(origArr, updatingArr) {
 
@@ -88,7 +90,7 @@ export async function getPlayerDataFromTracker(player, dateStart, dateEnd) {
 }
 
 export async function getPlayerDataFromCosmos(player, dateStart, dateEnd) {
-  if (!cosmosResult) {
+  if (!cosmosResult || !cosmosStartDate || !cosmosEndDate || !moment(cosmosStartDate).isSame(dateStart) || !moment(cosmosEndDate).isSame(dateEnd))  {
     console.log('Reading from cosmos')
     let path = `https://valorant-avg-2.azurewebsites.net/api/GetCompetitiveMatches?code=JNwPc50O/xMe4f47C1w0etitWGeNzwJtskfCU3Tdh2IoURWGmow55Q==&from=${moment(dateStart).format('YYYY-MM-DD')}&to=${moment(dateEnd).format('YYYY-MM-DD')}`;
     const res = await axios.get(path, {
@@ -98,6 +100,8 @@ export async function getPlayerDataFromCosmos(player, dateStart, dateEnd) {
 
     })
     cosmosResult = res.data
+    cosmosStartDate = dateStart
+    cosmosEndDate = dateEnd
   }
 
   return cosmosResult.filter(p => p.player == player)

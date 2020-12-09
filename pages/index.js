@@ -78,7 +78,7 @@ export default function Home(props) {
   const [active, setActive] = useState(false)
   const onChange = () => {
       setActive(true);
-      getData(startDate,endDate, getApiData).then(p => {setData(p);setActive(false)})
+      getData(moment(startDate).format('YYYY-MM-DD'),moment(endDate).format('YYYY-MM-DD'), getApiData).then(p => {setData(p);setActive(false)})
     }
 
     /*
