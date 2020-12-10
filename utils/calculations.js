@@ -47,9 +47,25 @@ const getLastMatch = (profile) => {
   return lastMatch
 }
 
+const getAllMatchesByDate = (profiles) => {
+  var map = {}
+  profiles.forEach(profile => {
+    const profileMatches = profile.players.map(p => p)
+      .flat();
+    if (profile.players.length == 1 && profileMatches.length > 0) {
+      profileMatches.forEach( match => {
+        if (!map.hasOwnProperty(moment(match.date).tz('Europe/Madrid'))) {
+          map[moment(match.date).tz('Europe/Madrid')] = []
+        }
+        map[moment(match.date).tz('Europe/Madrid')].push(getMatchInfo(match))
+      })
+    }
+  });
+  return map
+}
+
 export const getLastMatchForAllPlayers = (players) => {
-  const result = players.map( p => getMatchInfo(getLastMatch(p)))
-  console.log(result)
+  const result = getAllMatchesByDate(players)
   return result
 }
 

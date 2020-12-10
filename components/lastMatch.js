@@ -1,12 +1,22 @@
-import React from "react";
+import React, { useState } from "react";
 import { useSortBy, useTable } from 'react-table'
 import styles from '../styles/Home.module.css'
 import moment from 'moment-timezone';
 
 export const LastMatchTable = (props) => {
-    let filteredData = props.data.filter(p => p.kda != null).sort((p,q) =>  moment(p.date).isAfter(q))
-    let date = filteredData[0].date
-    filteredData = filteredData.filter(p => p.date == date)
+    const [index, setIndex] = useState(0)
+
+    let dates = [...Object.keys(props.data)]
+    dates.sort( (a,b) => {
+      if (moment(a).isBefore(moment(b)))
+        return 1
+      else
+        return -1
+    })        
+
+    console.log(dates)
+
+    let filteredData = props.data[dates[index]]
     let {
         getTableProps,
         getTableBodyProps,
@@ -57,8 +67,10 @@ export const LastMatchTable = (props) => {
           }
         }, useSortBy)
 
-    return (
-    <div className={styles.top}><div style={{textAlign:"center", marginBottom:"1rem"}}>Last Match</div>
+    return (      
+    <div className={styles.top}>
+      <div></div>
+      <div style={{textAlign:"center", marginBottom:"1rem"}}><h4><a href='#' onClick={() => setIndex(index < dates.length -1 ? index + 1 : index)}>&lt;&lt;</a> {index == 0 ? 'Last Match' : moment(dates[index]).format('YYYY-MM-DD HH:mm')} <a href='#' onClick={() => setIndex(index > 0 ? index -1: index)}>&gt;&gt;</a></h4></div>    
     <table {...getTableProps()} style={{ border: 'solid 1px black', borderSpacing: 0, margin: 'auto' }}>
               <thead>
                 {headerGroups.map(headerGroup => (

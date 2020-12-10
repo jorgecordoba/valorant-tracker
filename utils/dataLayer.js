@@ -13,7 +13,7 @@ let cosmosEndDate = null
 function mergeAndDeduplicate(origArr, updatingArr) {
 
   for (var i = 0; i < updatingArr.length; i++) {
-    if (!origArr.find(p => p.date == updatingArr[i].date))
+    if (!origArr.find(p => moment(p.date).isSame(moment(updatingArr[i].date))))
       origArr.push(updatingArr[i])
   }
   return origArr
