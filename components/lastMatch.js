@@ -12,9 +12,7 @@ export const LastMatchTable = (props) => {
         return 1
       else
         return -1
-    })        
-
-    console.log(dates)
+    })            
 
     let filteredData = props.data[dates[index]]
     let {

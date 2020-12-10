@@ -122,10 +122,11 @@ export async function getProfiles(dateStart, dateEnd) {
   const chaos = await getPlayerData('%CE%9E%CE%94%CE%9E%20Chaos%23Prime', 'ΞΔΞ Chaos#Prime', dateStart, dateEnd)
   const wallux = await getPlayerData('Wallux%23wal', 'Wallux#wal', dateStart, dateEnd)
   const iskes = await getPlayerData('Iskes%235895', 'Iskes#5895', dateStart, dateEnd)
+  const alchemy = await getPlayerData('Alchemy%23alt', 'Alchemy#alt', dateStart, dateEnd)
 
   const profiles = [
     {
-      name: "Broker All",
+      name: "Broker",
       rgb: brokerColors,
       players: [broker, neuras, ikeric],
       hidden: false,
@@ -143,7 +144,7 @@ export async function getProfiles(dateStart, dateEnd) {
     {
       name: "Chaos",
       rgb: chaosColors,
-      players: [chaos],
+      players: [chaos, alchemy],
       hidden: false,
       dateStart,
       dateEnd
@@ -165,7 +166,7 @@ export async function getProfiles(dateStart, dateEnd) {
       dateEnd
     },
     {
-      name: "Broker",
+      name: "Broker Main",
       rgb: randomRGB(),
       players: [broker],
       hidden: true,
@@ -184,6 +185,22 @@ export async function getProfiles(dateStart, dateEnd) {
       name: "Ikeric",
       rgb: randomRGB(),
       players: [ikeric],
+      hidden: true,
+      dateStart,
+      dateEnd
+    },
+    {
+      name: "Chaos Prime",
+      rgb: randomRGB(),
+      players: [chaos],
+      hidden: true,
+      dateStart,
+      dateEnd
+    },
+    {
+      name: "Alchemy",
+      rgb: randomRGB(),
+      players: [alchemy],
       hidden: true,
       dateStart,
       dateEnd
