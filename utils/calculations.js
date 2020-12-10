@@ -17,33 +17,40 @@ function isSameDayMatch(match, daysOffset) {
   return false;  
 }
 
-const getLastMatchInfo = (profile) => {
+const getMatchInfo = (match) => {
+  if (!match.player) return {}
 
-  let profileMatches = profile.players.map(p => p)
+  const totalShots = match.dealtHeadshots + match.dealtBodyshots + match.dealtLegshots
+  const lastMatchHeadShot = ((match.dealtHeadshots / totalShots) *100).toFixed(2)
+  const lastMatchLegShot = ((match.dealtLegshots / totalShots) *100).toFixed(2)
+
+  return {name: match.player, kda: `${match.kills} / ${match.deaths} / ${match.assists}`, firstBlood: match.firstBloods, firstDeath: match.deathsFirst, kdaRatio: match.kdRatio.toFixed(2), headshots: lastMatchHeadShot, legshots: lastMatchLegShot, result: `${match.roundsWon} - ${match.roundsLost}`, score: match.score, date: match.date}
+}
+
+const getLastMatch = (profile) => {
+
+  const profileMatches = profile.players.map(p => p)
       .flat();
 
   if (profile.players.length > 1 || profileMatches.length == 0) {
     return {}
   }
-
-  let currentDate = profileMatches[0].date
+  
+  let currentDate = moment(profileMatches[0].date)
   let lastMatch = profileMatches[0]
-  for (var i = 0; i < profileMatches.length; i++) {
-    if (!currentDate || moment(profileMatches[i].date).isAfter(currentDate)) {
-      currentDate = profileMatches[i].date
+  for (var i = 0; i < profileMatches.length; i++) {    
+    if (moment(profileMatches[i].date).isAfter(currentDate)) {      
+      currentDate = moment(profileMatches[i].date)
       lastMatch = profileMatches[i]
     }
-  }
-
-  const totalShots = lastMatch.dealtHeadshots + lastMatch.dealtBodyshots + lastMatch.dealtLegshots
-  const lastMatchHeadShot = ((lastMatch.dealtHeadshots / totalShots) *100).toFixed(2)
-  const lastMatchLegShot = ((lastMatch.dealtLegshots / totalShots) *100).toFixed(2)
-
-  return {name: lastMatch.player, kda: lastMatch.kdRatio.toFixed(2), headshots: lastMatchHeadShot, legshots: lastMatchLegShot, result: `${lastMatch.roundsWon} - ${lastMatch.roundsLost}`, score: lastMatch.score, date: lastMatch.date}
+  }  
+  return lastMatch
 }
 
 export const getLastMatchForAllPlayers = (players) => {
-  return players.map( p => getLastMatchInfo(p));
+  const result = players.map( p => getMatchInfo(getLastMatch(p)))
+  console.log(result)
+  return result
 }
 
 const getKda = (profile, dateOffset) => {

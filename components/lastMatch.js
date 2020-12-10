@@ -28,9 +28,13 @@ export const LastMatchTable = (props) => {
             },
             {
               Header: 'KDA',
-              accessor: 'kda',
-              sortType: 'alphanumeric'
+              accessor: 'kda',              
             },
+            {
+              Header: 'KDA Ratio',
+              accessor: 'kdaRatio',
+              sortType: 'alphanumeric'
+            },            
             {
               Header: 'Headshots',
               accessor: 'headshots',
