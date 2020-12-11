@@ -17,6 +17,19 @@ function isSameDayMatch(match, daysOffset) {
   return false;  
 }
 
+function isInDayRange(match, daysOffset) {  
+  if (match !== undefined) {
+    const matchDay= moment(match.date).tz('Europe/Madrid')
+    const range = 3;
+    return matchDay.isBetween(
+      moment(daysOffset).subtract(range, 'days'), 
+      moment(daysOffset).add(range + 1, 'days'), 
+      undefined, 
+      '[)');
+  }
+  return false;  
+}
+
 const getMatchInfo = (match) => {
   if (!match.player) return {}
 
@@ -72,7 +85,7 @@ export const getLastMatchForAllPlayers = (players) => {
 const getKda = (profile, dateOffset) => {
 
     let profileMatches = profile.players.map(p => p)
-      .flat().filter(match => isSameDayMatch(match, dateOffset));
+      .flat().filter(match => isInDayRange(match, dateOffset));
   
     const sumKda = profileMatches.reduce((current, match) => match.kdRatio + current, 0);
     const avgKda = sumKda / profileMatches.length
@@ -180,7 +193,7 @@ const getKda = (profile, dateOffset) => {
   const composePlayerAccuracy = (profile, dateOffset) => {
     const profilePlayers = profile.players.filter(p => p !== undefined);
     const profileMatches = profilePlayers.map(p => p)
-      .flat().filter(match => isSameDayMatch(match, dateOffset))
+      .flat().filter(match => isInDayRange(match, dateOffset))
   
     const headshots = profileMatches.reduce((current, match) => match.dealtHeadshots + current, 0);
     const bodyshots = profileMatches.reduce((current, match) => match.dealtBodyshots + current, 0);
