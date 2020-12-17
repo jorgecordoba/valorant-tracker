@@ -33,11 +33,12 @@ export const StatsTable = (props) => {
               accessor: 'avgScorePerRound',
               sortType: 'alphanumeric'
             },
-            {
-              Header: 'Score Average',
-              accessor: 'avgScore',
-              sortType: 'alphanumeric'
-            }
+           ,
+           {
+            Header: 'Played Matches',
+            accessor: 'nmatches',
+            sortType: 'alphanumeric'
+          }
           ], []),
           data: React.useMemo(() => filteredData, filteredData),
           initialState: {
