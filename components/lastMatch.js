@@ -30,6 +30,11 @@ export const LastMatchTable = (props) => {
               sortType: 'basic'
             },
             {
+              Header: 'Pos',
+              accessor: 'placement',
+              sortType: 'alphanumeric'
+            },
+            {
               Header: 'Score',
               accessor: 'score',
               sortType: 'alphanumeric'
@@ -61,7 +66,7 @@ export const LastMatchTable = (props) => {
           ], []),
           data: React.useMemo(() => filteredData, filteredData),
           initialState: {
-            sortBy: [{ id: 'score', desc: true }]
+            sortBy: [{ id: 'placement', desc: true }]
           }
         }, useSortBy)
 

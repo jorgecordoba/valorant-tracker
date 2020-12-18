@@ -37,7 +37,7 @@ const getMatchInfo = (match) => {
   const lastMatchHeadShot = ((match.dealtHeadshots / totalShots) *100).toFixed(2)
   const lastMatchLegShot = ((match.dealtLegshots / totalShots) *100).toFixed(2)
 
-  return {name: match.player, kda: `${match.kills} / ${match.deaths} / ${match.assists}`, firstBlood: match.firstBloods, firstDeath: match.deathsFirst, kdaRatio: match.kdRatio.toFixed(2), headshots: lastMatchHeadShot, legshots: lastMatchLegShot, result: `${match.roundsWon} - ${match.roundsLost}`, score: match.score, date: match.date}
+  return {name: match.player, kda: `${match.kills} / ${match.deaths} / ${match.assists}`, placement: match.placement, firstBlood: match.firstBloods, firstDeath: match.deathsFirst, kdaRatio: match.kdRatio.toFixed(2), headshots: lastMatchHeadShot, legshots: lastMatchLegShot, result: `${match.roundsWon} - ${match.roundsLost}`, score: match.score, date: match.date}
 }
 
 const getLastMatch = (profile) => {

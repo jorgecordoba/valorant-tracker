@@ -123,6 +123,7 @@ export async function getProfiles(dateStart, dateEnd) {
   const wallux = await getPlayerData('Wallux%23wal', 'Wallux#wal', dateStart, dateEnd)
   const iskes = await getPlayerData('Iskes%235895', 'Iskes#5895', dateStart, dateEnd)
   const alchemy = await getPlayerData('Alchemy%23alt', 'Alchemy#alt', dateStart, dateEnd)
+  const iber0 = await getPlayerData('KingIber0%235488', 'KingIber0#5488', dateStart, dateEnd)
 
   const profiles = [
     {
@@ -186,6 +187,14 @@ export async function getProfiles(dateStart, dateEnd) {
       rgb: randomRGB(),
       players: [ikeric],
       hidden: true,
+      dateStart,
+      dateEnd
+    },
+    {
+      name: "Iber0",
+      rgb: randomRGB(),
+      players: [iber0],
+      hidden: false,
       dateStart,
       dateEnd
     },
