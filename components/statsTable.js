@@ -42,7 +42,7 @@ export const StatsTable = (props) => {
           ], []),
           data: React.useMemo(() => filteredData, filteredData),
           initialState: {
-            sortBy: [{ id: 'avgKda', desc: false }]
+            sortBy: [{ id: 'avgKda', desc: true }]
           }
         }, useSortBy)
 

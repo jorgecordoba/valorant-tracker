@@ -66,7 +66,7 @@ export const LastMatchTable = (props) => {
           ], []),
           data: React.useMemo(() => filteredData, filteredData),
           initialState: {
-            sortBy: [{ id: 'placement', desc: true }]
+            sortBy: [{ id: 'placement', desc: false }]
           }
         }, useSortBy)
 
