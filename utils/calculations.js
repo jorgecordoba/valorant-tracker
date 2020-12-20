@@ -37,7 +37,7 @@ const getMatchInfo = (match) => {
   const lastMatchHeadShot = ((match.dealtHeadshots / totalShots) *100).toFixed(2)
   const lastMatchLegShot = ((match.dealtLegshots / totalShots) *100).toFixed(2)
 
-  return {name: match.player, kda: `${match.kills} / ${match.deaths} / ${match.assists}`, placement: match.placement, firstBlood: match.firstBloods, firstDeath: match.deathsFirst, kdaRatio: match.kdRatio.toFixed(2), headshots: lastMatchHeadShot, legshots: lastMatchLegShot, result: `${match.roundsWon} - ${match.roundsLost}`, score: match.score, date: match.date}
+  return {name: match.player, kda: `${match.kills} / ${match.deaths} / ${match.assists}`, placement: match.placement, firstBlood: match.firstBloods, firstDeath: match.deathsFirst, kdaRatio: match.kdRatio.toFixed(2), headshots: lastMatchHeadShot, legshots: lastMatchLegShot, result: `${match.roundsWon} - ${match.roundsLost}`, won: match.roundsWon > match.roundsLost, wonRatio: match.roundsWon / match.roundsLost, score: match.score, date: match.date}
 }
 
 const getLastMatch = (profile) => {
@@ -77,8 +77,28 @@ const getAllMatchesByDate = (profiles) => {
   return map
 }
 
+const groupMatchesByPlayers = (matchesByDate) => {
+  let result = {}
+
+  for (var date in matchesByDate) {    
+    const players = matchesByDate[date].map(p => p.name).sort()
+    const hash = players.reduce ( (acc, p) => {return `${p}${acc}`}, '')        
+    if (!result.hasOwnProperty(hash)) {
+      result[hash] = {players: players, matches: []}
+    }
+    
+    result[hash].matches.push(matchesByDate[date])
+    result[hash].won = result[hash].matches.reduce( (acc, cur) => cur[0].won ? 1:0 + acc, 0) * 100 / result[hash].matches.length
+    result[hash].wonRatio = result[hash].matches.reduce( (acc, cur) => cur[0].wonRatio + acc, 0) / result[hash].matches.length 
+  }
+
+  return result
+
+}
+
 export const getLastMatchForAllPlayers = (players) => {
-  const result = getAllMatchesByDate(players)
+  const result = getAllMatchesByDate(players)  
+  // console.log(JSON.stringify(groupMatchesByPlayers(result)))
   return result
 }
 
@@ -188,7 +208,7 @@ const getKda = (profile, dateOffset) => {
     }
 
     return labels
-  }
+  }  
   
   const composePlayerAccuracy = (profile, dateOffset) => {
     const profilePlayers = profile.players.filter(p => p !== undefined);

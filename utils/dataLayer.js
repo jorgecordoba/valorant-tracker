@@ -194,7 +194,7 @@ export async function getProfiles(dateStart, dateEnd) {
       name: "Iber0",
       rgb: randomRGB(),
       players: [iber0],
-      hidden: false,
+      hidden: true,
       dateStart,
       dateEnd
     },
