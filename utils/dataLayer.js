@@ -129,6 +129,7 @@ export async function getProfiles(dateStart, dateEnd) {
   const iber0 = await getPlayerData('KingIber0%235488', 'KingIber0#5488', dateStart, dateEnd)
   const zekiSmurf = await getPlayerData('Zeki%236666', 'Zeki#6666', dateStart, dateEnd)
   const bandi = await getPlayerData('Bandiduel%23EUW', 'Bandiduel#EUW', dateStart, dateEnd)
+  const weillySmurf = await getPlayerData('weilly%23wal', 'weilly#wal', dateStart, dateEnd)
 
   const profiles = [
     {
@@ -158,7 +159,7 @@ export async function getProfiles(dateStart, dateEnd) {
     {
       name: "Wallux",
       rgb: weillyColors,
-      players: [wallux],
+      players: [wallux, weillySmurf],
       hidden: false,
       dateStart,
       dateEnd
@@ -228,9 +229,33 @@ export async function getProfiles(dateStart, dateEnd) {
       dateEnd
     },
     {
+      name: "Zeki Main",
+      rgb: randomRGB(),
+      players: [zeki],
+      hidden: true,
+      dateStart,
+      dateEnd
+    },
+    {
       name: "Zeki Smurf",
       rgb: randomRGB(),
       players: [zekiSmurf],
+      hidden: true,
+      dateStart,
+      dateEnd
+    },
+    {
+      name: "Weilly Main",
+      rgb: randomRGB(),
+      players: [wallux],
+      hidden: true,
+      dateStart,
+      dateEnd
+    },
+    {
+      name: "Weilly Smurf",
+      rgb: randomRGB(),
+      players: [weillySmurf],
       hidden: true,
       dateStart,
       dateEnd
