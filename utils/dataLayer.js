@@ -127,7 +127,7 @@ export async function getProfiles(dateStart, dateEnd) {
   const iskes = await getPlayerData('Iskes%235895', 'Iskes#5895', dateStart, dateEnd)
   const alchemy = await getPlayerData('Alchemy%23alt', 'Alchemy#alt', dateStart, dateEnd)
   const iber0 = await getPlayerData('KingIber0%235488', 'KingIber0#5488', dateStart, dateEnd)
-  const zekiSmurf = await getPlayerData('Zeki%23666', 'Zeki#666', dateStart, dateEnd)
+  const zekiSmurf = await getPlayerData('Zeki%236666', 'Zeki#6666', dateStart, dateEnd)
   const bandi = await getPlayerData('Bandiduel%23EUW', 'Bandiduel#EUW', dateStart, dateEnd)
 
   const profiles = [
