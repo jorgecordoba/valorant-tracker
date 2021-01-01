@@ -83,10 +83,13 @@ export async function getPlayerDataFromTracker(player, dateStart, dateEnd) {
     },
 
   })
-  let data = await transformData(res.data.data)
-  data = data.filter(p => moment(p.date).isSameOrAfter(dateStart, 'day'))
-  data = data.filter(p => moment(p.date).isSameOrBefore(dateEnd, 'day'))
-  return data
+  if (res.data.data) {
+    let data = await transformData(res.data.data)
+    data = data.filter(p => moment(p.date).isSameOrAfter(dateStart, 'day'))
+    data = data.filter(p => moment(p.date).isSameOrBefore(dateEnd, 'day'))  
+    return data
+  }
+  return []
 }
 
 export async function getPlayerDataFromCosmos(player, dateStart, dateEnd) {
@@ -124,6 +127,8 @@ export async function getProfiles(dateStart, dateEnd) {
   const iskes = await getPlayerData('Iskes%235895', 'Iskes#5895', dateStart, dateEnd)
   const alchemy = await getPlayerData('Alchemy%23alt', 'Alchemy#alt', dateStart, dateEnd)
   const iber0 = await getPlayerData('KingIber0%235488', 'KingIber0#5488', dateStart, dateEnd)
+  const zekiSmurf = await getPlayerData('Zeki%23666', 'Zeki#666', dateStart, dateEnd)
+  const bandi = await getPlayerData('Bandiduel%23EUW', 'Bandiduel#EUW', dateStart, dateEnd)
 
   const profiles = [
     {
@@ -137,7 +142,7 @@ export async function getProfiles(dateStart, dateEnd) {
     {
       name: "Zehcnas",
       rgb: zekiColors,
-      players: [zeki],
+      players: [zeki, zekiSmurf],
       hidden: false,
       dateStart,
       dateEnd
@@ -162,6 +167,14 @@ export async function getProfiles(dateStart, dateEnd) {
       name: "Iskes",
       rgb: iskesColors,
       players: [iskes],
+      hidden: true,
+      dateStart,
+      dateEnd
+    },
+    {
+      name: "Bandi",
+      rgb: iskesColors,
+      players: [bandi],
       hidden: true,
       dateStart,
       dateEnd
@@ -210,6 +223,14 @@ export async function getProfiles(dateStart, dateEnd) {
       name: "Alchemy",
       rgb: randomRGB(),
       players: [alchemy],
+      hidden: true,
+      dateStart,
+      dateEnd
+    },
+    {
+      name: "Zeki Smurf",
+      rgb: randomRGB(),
+      players: [zekiSmurf],
       hidden: true,
       dateStart,
       dateEnd
