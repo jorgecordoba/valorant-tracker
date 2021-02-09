@@ -6,6 +6,7 @@ const chaosColors = { r: 59, g: 227, b: 104 }
 const zekiColors = { r: 227, g: 196, b: 59 }
 const weillyColors = { r: 227, g: 59, b: 59 }
 const iskesColors = { r: 196, g: 59, b: 227 }
+const bandiColors = { r: 196, g: 227, b: 227 }
 let cosmosResult = null
 let cosmosStartDate = null
 let cosmosEndDate = null
@@ -168,15 +169,15 @@ export async function getProfiles(dateStart, dateEnd) {
       name: "Iskes",
       rgb: iskesColors,
       players: [iskes],
-      hidden: true,
+      hidden: false,
       dateStart,
       dateEnd
     },
     {
       name: "Bandi",
-      rgb: iskesColors,
+      rgb: bandiColors,
       players: [bandi],
-      hidden: true,
+      hidden: false,
       dateStart,
       dateEnd
     },

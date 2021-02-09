@@ -29,6 +29,11 @@ export const StatsTable = (props) => {
               sortType: 'alphanumeric'
             },
             {
+              Header: 'Average Position',
+              accessor: 'avgPosition',
+              sortType: 'alphanumeric'
+            },
+            {
               Header: 'Round Average',
               accessor: 'avgScorePerRound',
               sortType: 'alphanumeric'

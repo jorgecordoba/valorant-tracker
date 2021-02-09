@@ -129,7 +129,11 @@ const getKda = (profile, dateOffset) => {
 
     const sumScore = profileMatches.reduce((current, match) => match.score + current, 0);
     const avgScore = (sumScore / profileMatches.length).toFixed(2);
+    const sumPosition = profileMatches.reduce((current, match) => match.placement + current, 0)
+    const avgPosition = (sumPosition / profileMatches.length).toFixed(2)
   
+    console.log('Avg position is ' + avgPosition)
+
     const econRating = profileMatches.reduce((current, match) => match.econRating + current, 0);
     const avgEconRating = (econRating / profileMatches.length).toFixed(2);
    
@@ -154,8 +158,8 @@ const getKda = (profile, dateOffset) => {
     const agents = []
   
     profileMatches.reduce((current, match) => {
-      const agent = match.agent
-      const agentName = match.agent
+      const agent = match.agent ?? ''
+      const agentName = match.agent ?? ''
       const scorePerRound =  match.scorePerRound
       if (!current[agent]) {
         current[agent] = { agentName: agentName, numPlayed: 0, addedScorePerRound: 0, profileName: profile.name };
@@ -166,7 +170,7 @@ const getKda = (profile, dateOffset) => {
       return current;
       }, {});      
 
-    const average = {name, rgb, avgKda, kdaStandardDev, avgScore, avgEconRating, avgScorePerRound, nmatches, hidden, headshots, legshots, bodyshots, firstBloods, deathsFirst, agents};
+    const average = {name, rgb, avgKda, kdaStandardDev, avgScore, avgEconRating, avgScorePerRound, nmatches, hidden, headshots, legshots, bodyshots, firstBloods, deathsFirst, agents, avgPosition};
 
     return average;
   }  
