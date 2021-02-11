@@ -155,6 +155,9 @@ const getKda = (profile, dateOffset) => {
     const firstBloods = profileMatches.reduce((current, match) => match.firstBloods + current, 0);
     const deathsFirst = profileMatches.reduce((current, match) => match.deathsFirst + current, 0) * -1;
 
+    const wins = profileMatches.filter(match => match.roundsWon > match.roundsLost).length;
+    const winRate = (wins * 100 / nmatches).toFixed(2);
+
     const agents = []
   
     profileMatches.reduce((current, match) => {
@@ -170,7 +173,7 @@ const getKda = (profile, dateOffset) => {
       return current;
       }, {});      
 
-    const average = {name, rgb, avgKda, kdaStandardDev, avgScore, avgEconRating, avgScorePerRound, nmatches, hidden, headshots, legshots, bodyshots, firstBloods, deathsFirst, agents, avgPosition};
+    const average = {name, rgb, avgKda, kdaStandardDev, avgScore, avgEconRating, avgScorePerRound, nmatches, hidden, headshots, legshots, bodyshots, firstBloods, deathsFirst, agents, avgPosition, winRate};
 
     return average;
   }  

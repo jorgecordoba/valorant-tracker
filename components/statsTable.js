@@ -43,7 +43,12 @@ export const StatsTable = (props) => {
             Header: 'Played Matches',
             accessor: 'nmatches',
             sortType: 'alphanumeric'
-          }
+           },
+           {
+            Header: 'Win Rate',
+            accessor: 'winRate',
+            sortType: 'alphanumeric'
+           }
           ], []),
           data: React.useMemo(() => filteredData, filteredData),
           initialState: {
