@@ -177,7 +177,7 @@ export async function getProfiles(dateStart, dateEnd) {
       name: "Bandi",
       rgb: bandiColors,
       players: [bandi],
-      hidden: false,
+      hidden: true,
       dateStart,
       dateEnd
     },

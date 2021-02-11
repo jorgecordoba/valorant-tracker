@@ -113,6 +113,34 @@ const getKda = (profile, dateOffset) => {
     return avgKda;
   }
   
+  const getMatchesSummary = (profile) => {
+    const name = profile.name
+    const profilePlayers = profile.players.filter(p => p !== undefined);
+    const profileMatches = profilePlayers.map(p => p)
+      .flat(); 
+    const matchesWon = profileMatches.filter( p => p.roundsWon > p.roundsLost)
+    const matchesLost = profileMatches.filter( p => p.roundsLost > p.roundsWon)
+    const percentageWon = matchesWon.length * 100 / profileMatches.length
+
+    const dateIsAtNight = (date) => {
+      let momentDate = moment(date)
+      return momentDate.day() != momentDate.add(4, 'hours').day() || momentDate.day() != momentDate.add(-8, 'hours').day()
+    }
+
+    const matchesWonAtNight = matchesWon.filter( p => dateIsAtNight(p.date))
+    const matchesWonAtAfternoon = matchesWon.filter( p => !dateIsAtNight(p.date))
+    const matchesLostAtNight = matchesLost.filter( p => dateIsAtNight(p.date))
+    const matchesLostAtAfternoon = matchesLost.filter( p => !dateIsAtNight(p.date))
+    const percentageWonAtNight = matchesWonAtNight.length * 100 / (matchesWonAtNight.length + matchesLostAtNight.length)
+    const percentageWonAtAfternoon = matchesWonAtAfternoon.length * 100 / (matchesWonAtAfternoon.length + matchesLostAtAfternoon.length) 
+    const percentageWonAtNightOverTotal = matchesWonAtNight.length * 100 / profileMatches.length
+    const percentageWonAtAfternoonOverTotal = matchesWonAtAfternoon.length * 100 / profileMatches.length
+    const percentageAfternoonOverWinRate = matchesWonAtAfternoon.length *100 / (matchesWonAtAfternoon.length + matchesWonAtNight.length) 
+    const totalPlayedAtNight = (matchesWonAtNight.length + matchesLostAtNight.length)
+    const totalPlayedAtAfternoon = (matchesWonAtAfternoon.length + matchesLostAtAfternoon.length) 
+    return { name, percentageWon,percentageWonAtNightOverTotal, percentageWonAtAfternoonOverTotal, percentageWonAtNight, percentageWonAtAfternoon, percentageAfternoonOverWinRate, totalPlayedAtAfternoon, totalPlayedAtNight}
+  }
+
   const getAvg = (profile) => {
   
     const name = profile.name;
@@ -155,8 +183,7 @@ const getKda = (profile, dateOffset) => {
     const firstBloods = profileMatches.reduce((current, match) => match.firstBloods + current, 0);
     const deathsFirst = profileMatches.reduce((current, match) => match.deathsFirst + current, 0) * -1;
 
-    const wins = profileMatches.filter(match => match.roundsWon > match.roundsLost).length;
-    const winRate = (wins * 100 / nmatches).toFixed(2);
+    const matchStats = getMatchesSummary(profile)
 
     const agents = []
   
@@ -173,7 +200,7 @@ const getKda = (profile, dateOffset) => {
       return current;
       }, {});      
 
-    const average = {name, rgb, avgKda, kdaStandardDev, avgScore, avgEconRating, avgScorePerRound, nmatches, hidden, headshots, legshots, bodyshots, firstBloods, deathsFirst, agents, avgPosition, winRate};
+    const average = {name, rgb, avgKda, kdaStandardDev, avgScore, avgEconRating, avgScorePerRound, nmatches, hidden, headshots, legshots, bodyshots, firstBloods, deathsFirst, agents, avgPosition, winRate: matchStats.percentageWon.toFixed(1), winRateNight: matchStats.percentageWonAtNightOverTotal.toFixed(1), winRateAfternoon: matchStats.percentageWonAtAfternoonOverTotal.toFixed(1)};
 
     return average;
   }  
@@ -231,6 +258,10 @@ const getKda = (profile, dateOffset) => {
     const pLegshots = legshots * 100 / totalShots  
   
     return {pHeadshots, pBodyshots, pLegshots}
+  }
+
+  export const composePercentageWon = (players) => {
+    return players.map( p=> getMatchesSummary(p))
   }
 
   export const composeAvgData = (players) => {

@@ -1,7 +1,7 @@
 import Head from 'next/head'
 import styles from '../styles/Home.module.css'
 import {composeAvgData, composeBodyshotGraph, composeHeadshotGraph, composeKdaGraph, composeLegshotGraph, 
-  composeRadarDataSet, composeAgentsRadarDataSet, composeAvgDataSet, composeFireDetailDataSet, composeFirstBloodsDeathsDataSet, getLastMatchForAllPlayers} from '../utils/calculations'
+  composeRadarDataSet, composeAgentsRadarDataSet, composeAvgDataSet, composeFireDetailDataSet, composeFirstBloodsDeathsDataSet, getLastMatchForAllPlayers, composePercentageWon} from '../utils/calculations'
 import {LineGraph} from '../components/linegraph'
 import { BarGraph } from '../components/bargraph';
 import { GroupedBarGraph } from '../components/groupedbargraph';
@@ -42,6 +42,7 @@ async function getData(dateStart, dateEnd, func) {
   const bodyshots = composeBodyshotGraph(profiles)
   const legshots = composeLegshotGraph(profiles)
   const lastMatch = getLastMatchForAllPlayers(profiles)
+  const percentageWon = composePercentageWon(profiles)
 
   return (
     {
@@ -50,7 +51,8 @@ async function getData(dateStart, dateEnd, func) {
       bodyshots,
       legshots,
       avgData,
-      lastMatch
+      lastMatch,
+      percentageWon
     }
   )
 }
@@ -80,33 +82,6 @@ export default function Home(props) {
       setActive(true);
       getData(moment(startDate).format('YYYY-MM-DD'),moment(endDate).format('YYYY-MM-DD'), getApiData).then(p => {setData(p);setActive(false)})
     }
-
-    /*
-  let queryStartDate = startDate
-  let queryEndDate = endDate
-
-  if (router.query.startDate)
-    queryStartDate = Date.parse(router.query.startDate)
-  if (router.query.endDate)
-    queryEndDate = Date.parse(router.query.endDate)
-
-  let changed = false
-  if (router.query.startDate && router.query.startDate != startDate){
-    console.log('Change date ' + router.query.startDate)
-    setStartDate(router.query.startDate)
-    changed = true
-  }
-
-  if (router.query.endDate && router.query.endDate != endDate) {
-    setEndDate(router.query.endDate)
-    changed = true
-  }
-
-  if (changed) {
-    onChange()
-  }
-
-  */
 
   return (
     <LoadingOverlay

@@ -48,7 +48,17 @@ export const StatsTable = (props) => {
             Header: 'Win Rate',
             accessor: 'winRate',
             sortType: 'alphanumeric'
-           }
+           },
+           {
+            Header: 'W/R Night',
+            accessor: 'winRateNight',
+            sortType: 'alphanumeric'
+           },
+           {
+            Header: 'W/R Afternoon',
+            accessor: 'winRateAfternoon',
+            sortType: 'alphanumeric'
+           },
           ], []),
           data: React.useMemo(() => filteredData, filteredData),
           initialState: {
