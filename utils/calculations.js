@@ -143,6 +143,9 @@ const getKda = (profile, dateOffset) => {
 
   const getAvg = (profile) => {
   
+    if (profile.name == 'Iskes')
+      console.log(JSON.stringify(profile))
+
     const name = profile.name;
     const rgb = profile.rgb;
 
@@ -348,13 +351,13 @@ const getKda = (profile, dateOffset) => {
     datasets: [
       {
         label: 'First Bloods',
-        data: avgData.map(firstbloodsFunc),
+        data: avgData.filter(p => !p.hidden).map(firstbloodsFunc),
         backgroundColor: `rgba(20,144,255,0.4)`,
         stack: 1,
       },     
       {
         label: 'Deaths First',
-        data: avgData.map(deathsFirstFunc),
+        data: avgData.filter(p => !p.hidden).map(deathsFirstFunc),
         backgroundColor: `rgba(255,0,0,0.4)`,
         stack: 1,
       }]   
