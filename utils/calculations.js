@@ -203,7 +203,7 @@ const getKda = (profile, dateOffset) => {
       return current;
       }, {});      
 
-    const average = {name, rgb, avgKda, kdaStandardDev, avgScore, avgEconRating, avgScorePerRound, nmatches, hidden, headshots, legshots, bodyshots, firstBloods, deathsFirst, agents, avgPosition, winRate: matchStats.percentageWon.toFixed(1), winRateNight: matchStats.percentageWonAtNightOverTotal.toFixed(1), winRateAfternoon: matchStats.percentageWonAtAfternoonOverTotal.toFixed(1)};
+    const average = {name, rgb, avgKda, kdaStandardDev, avgScore, avgEconRating, avgScorePerRound, nmatches, hidden, headshots, legshots, bodyshots, firstBloods, deathsFirst, agents, avgPosition, winRate: matchStats.percentageWon.toFixed(1), winRateNight: matchStats.percentageWonAtNight.toFixed(1), winRateAfternoon: matchStats.percentageWonAtAfternoon.toFixed(1)};
 
     return average;
   }  
