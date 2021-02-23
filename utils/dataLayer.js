@@ -74,23 +74,28 @@ async function transformData(data) {
   );
 }
 
-export async function getPlayerDataFromTracker(player, dateStart, dateEnd) {
-  let path = `https://api.tracker.gg/api/v2/valorant/rap-matches/riot/${player}?type=competitive&next=null`
-  const res = await axios.get(path, {
-    headers: {
-      'TRN-Api-Key': '203c55ac-fb74-4fde-a3ce-20cd70661d4a',
-      'Access-Control-Allow-Origin': '*',
-      'Accept': 'application/json'
-    },
+export async function getPlayerDataFromTracker(player, dateStart, dateEnd) {  
+  let path = `https://api.tracker.gg/api/v2/valorant/standard/matches/riot/${player}?type=competitive`
+  try {
+    const res = await axios.get(path, {
+      headers: {
+        'TRN-Api-Key': '203c55ac-fb74-4fde-a3ce-20cd70661d4a',
+        'Access-Control-Allow-Origin': '*',
+        'Accept': 'application/json'
+      },
 
-  })
-  if (res.data.data) {
-    let data = await transformData(res.data.data)
-    data = data.filter(p => moment(p.date).isSameOrAfter(dateStart, 'day'))
-    data = data.filter(p => moment(p.date).isSameOrBefore(dateEnd, 'day'))  
-    return data
+    })
+    if (res.data.data) {
+      let data = await transformData(res.data.data)
+      data = data.filter(p => moment(p.date).isSameOrAfter(dateStart, 'day'))
+      data = data.filter(p => moment(p.date).isSameOrBefore(dateEnd, 'day'))  
+      return data
+    }
+    return []
   }
-  return []
+  catch {
+    return []
+  } 
 }
 
 export async function getPlayerDataFromCosmos(player, dateStart, dateEnd) {
