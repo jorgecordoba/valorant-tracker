@@ -40,21 +40,21 @@ export const LastMatchTable = (props) => {
               sortType: 'alphanumeric'
             },
             {
-              Header: 'KDA',
+              Header: 'Result',
               accessor: 'kda',              
             },
             {
-              Header: 'KDA Ratio',
+              Header: 'KDA',
               accessor: 'kdaRatio',
               sortType: 'alphanumeric'
             },            
             {
-              Header: 'Headshots',
+              Header: 'Hs',
               accessor: 'headshots',
               sortType: 'alphanumeric'
             },
             {
-              Header: 'Podología',
+              Header: 'LS',
               accessor: 'legshots',
               sortType: 'alphanumeric'
             },

@@ -24,7 +24,7 @@ export const StatsTable = (props) => {
               sortType: 'alphanumeric'
             },
             {
-              Header: 'Avg #',
+              Header: 'Pos',
               accessor: 'avgPosition',
               sortType: 'alphanumeric'
             },
@@ -35,7 +35,7 @@ export const StatsTable = (props) => {
             },
            ,
            {
-            Header: '# Matches',
+            Header: '# P',
             accessor: 'nmatches',
             sortType: 'alphanumeric'
            },
