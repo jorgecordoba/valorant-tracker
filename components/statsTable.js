@@ -19,43 +19,38 @@ export const StatsTable = (props) => {
               sortType: 'basic'
             },
             {
-              Header: 'KDA Avg',
+              Header: 'KDA',
               accessor: 'avgKda',
               sortType: 'alphanumeric'
             },
             {
-              Header: 'Kda Dev',
-              accessor: 'kdaStandardDev',
-              sortType: 'alphanumeric'
-            },
-            {
-              Header: 'Average Position',
+              Header: 'Avg #',
               accessor: 'avgPosition',
               sortType: 'alphanumeric'
             },
             {
-              Header: 'Round Average',
+              Header: 'R/S Avg',
               accessor: 'avgScorePerRound',
               sortType: 'alphanumeric'
             },
            ,
            {
-            Header: 'Played Matches',
+            Header: '# Matches',
             accessor: 'nmatches',
             sortType: 'alphanumeric'
            },
            {
-            Header: 'Win Rate',
+            Header: 'W/R',
             accessor: 'winRate',
             sortType: 'alphanumeric'
            },
            {
-            Header: 'W/R Night',
+            Header: 'W/R N',
             accessor: 'winRateNight',
             sortType: 'alphanumeric'
            },
            {
-            Header: 'W/R Afternoon',
+            Header: 'W/R A',
             accessor: 'winRateAfternoon',
             sortType: 'alphanumeric'
            },
