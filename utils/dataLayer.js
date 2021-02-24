@@ -28,7 +28,7 @@ export function randomRGB() {
   return { r, g, b }
 }
 
-export async function mergePlayerData(player1, player2) {
+export async function mpd(player1, player2) {
   if (player1 && player2 && player1.matches && player2.matches) {
     player1.matches = new Map([...player1.matches, ...player2.matches])
   }
@@ -74,8 +74,9 @@ async function transformData(data) {
   );
 }
 
-export async function getPlayerDataFromTracker(player, dateStart, dateEnd) {  
-  let path = `https://api.tracker.gg/api/v2/valorant/standard/matches/riot/${player}?type=competitive`
+export async function getPlayerDataFromTrackerIndex(player, index,dateStart, dateEnd) {
+  let path = `https://api.tracker.gg/api/v2/valorant/standard/matches/riot/${player}?type=competitive&next=${index}`
+  console.log(`Reading ${path}`)
   try {
     const res = await axios.get(path, {
       headers: {
@@ -98,6 +99,31 @@ export async function getPlayerDataFromTracker(player, dateStart, dateEnd) {
   } 
 }
 
+export async function getPlayerDataFromTracker(player, dateStart, dateEnd) { 
+  var d0 = getPlayerDataFromTrackerIndex(player, 0, dateStart, dateEnd)
+  var d1 = getPlayerDataFromTrackerIndex(player, 1, dateStart, dateEnd)
+  var d2 = getPlayerDataFromTrackerIndex(player, 2, dateStart, dateEnd)
+  var d3 = getPlayerDataFromTrackerIndex(player, 3, dateStart, dateEnd)
+  var d4 = getPlayerDataFromTrackerIndex(player, 4, dateStart, dateEnd)
+  var d5 = getPlayerDataFromTrackerIndex(player, 5, dateStart, dateEnd)
+  var d6 = getPlayerDataFromTrackerIndex(player, 6, dateStart, dateEnd)
+  var d7 = getPlayerDataFromTrackerIndex(player, 7, dateStart, dateEnd)
+  var d8 = getPlayerDataFromTrackerIndex(player, 8, dateStart, dateEnd)
+
+  var data0 = await d0
+  var data1 = await d1
+  var data2 = await d2
+  var data3 = await d3
+  var data4 = await d4
+  var data5 = await d5
+  var data6 = await d6
+  var data7 = await d7
+  var data8 = await d8
+
+  var all = data0.concat(data1, data2, data3, data4, data5, data6, data7, data8)
+  return all
+}
+
 export async function getPlayerDataFromCosmos(player, dateStart, dateEnd) {
   if (!cosmosResult || !cosmosStartDate || !cosmosEndDate || !moment(cosmosStartDate).isSame(dateStart) || !moment(cosmosEndDate).isSame(dateEnd))  {
     console.log('Reading from cosmos')
@@ -117,28 +143,43 @@ export async function getPlayerDataFromCosmos(player, dateStart, dateEnd) {
 }
 
 export async function getPlayerData(playerTracker, playerCosmos, dateStart, dateEnd) {
+  console.log(`Retreiving data for ${playerTracker}`)
   let dataFromTracker = await getPlayerDataFromTracker(playerTracker, dateStart, dateEnd)
-  let dataFromCosmos = await getPlayerDataFromCosmos(playerCosmos, dateStart, dateEnd)
-
-  return mergeAndDeduplicate(dataFromCosmos, dataFromTracker)
+  return dataFromTracker
 }
 
 export async function getProfiles(dateStart, dateEnd) {
-  const broker = await getPlayerData('Broker%236969', 'Broker#6969', dateStart, dateEnd)
-  const neuras = await getPlayerData('Neuras%234402', 'Neuras#4402', dateStart, dateEnd)
-  const ikeric = await getPlayerData('Ikeric%235421', 'Ikeric#5421', dateStart, dateEnd)
-  const zeki = await getPlayerData('Zehcnas%23666', 'Zehcnas#666', dateStart, dateEnd)
-  const chaos = await getPlayerData('%CE%9E%CE%94%CE%9E%20Chaos%23Prime', 'ΞΔΞ Chaos#Prime', dateStart, dateEnd)
-  const wallux = await getPlayerData('Wallux%23wal', 'Wallux#wal', dateStart, dateEnd)
-  const iskes = await getPlayerData('Iskes%235895', 'Iskes#5895', dateStart, dateEnd)
-  const alchemy = await getPlayerData('Alchemy%23alt', 'Alchemy#alt', dateStart, dateEnd)
-  const iber0 = await getPlayerData('KingIber0%235488', 'KingIber0#5488', dateStart, dateEnd)
-  const zekiSmurf = await getPlayerData('Zeki%236666', 'Zeki#6666', dateStart, dateEnd)
-  const bandi = await getPlayerData('Bandiduel%23EUW', 'Bandiduel#EUW', dateStart, dateEnd)
-  const weillySmurf = await getPlayerData('weilly%23wal', 'weilly#wal', dateStart, dateEnd)
-  const platanito = await getPlayerData('platanito%23fruta', 'platanito#fruta', dateStart, dateEnd)
-  const elpodologo = await getPlayerData('elpodologo%236629', 'elpodologo#6629', dateStart, dateEnd)
-  const brokerSnow = await getPlayerData('BrokerSnow%234502', 'BrokerSnow#4502', dateStart, dateEnd)
+  const brokerPromise = getPlayerData('Broker%236969', 'Broker#6969', dateStart, dateEnd)
+  const neurasPromise = getPlayerData('Neuras%234402', 'Neuras#4402', dateStart, dateEnd)
+  const ikericPromise = getPlayerData('Ikeric%235421', 'Ikeric#5421', dateStart, dateEnd)
+  const zekiPromise = getPlayerData('Zehcnas%23666', 'Zehcnas#666', dateStart, dateEnd)
+  const chaosPromise = getPlayerData('%CE%9E%CE%94%CE%9E%20Chaos%23Prime', 'ΞΔΞ Chaos#Prime', dateStart, dateEnd)
+  const walluxPromise = getPlayerData('Wallux%23wal', 'Wallux#wal', dateStart, dateEnd)
+  const iskesPromise = getPlayerData('Iskes%235895', 'Iskes#5895', dateStart, dateEnd)
+  const alchemyPromise = getPlayerData('Alchemy%23alt', 'Alchemy#alt', dateStart, dateEnd)
+  const iber0Promise = getPlayerData('KingIber0%235488', 'KingIber0#5488', dateStart, dateEnd)
+  const zekiSmurfPromise = getPlayerData('Zeki%236666', 'Zeki#6666', dateStart, dateEnd)
+  const bandiPromise = getPlayerData('Bandiduel%23EUW', 'Bandiduel#EUW', dateStart, dateEnd)
+  const weillySmurfPromise = getPlayerData('weilly%23wal', 'weilly#wal', dateStart, dateEnd)
+  const platanitoPromise = getPlayerData('platanito%23fruta', 'platanito#fruta', dateStart, dateEnd)
+  const elpodologoPromise = getPlayerData('elpodologo%236629', 'elpodologo#6629', dateStart, dateEnd)
+  const brokerSnowPromise = getPlayerData('BrokerSnow%234502', 'BrokerSnow#4502', dateStart, dateEnd)
+
+  const broker = await brokerPromise
+  const neuras = await neurasPromise
+  const ikeric = await ikericPromise
+  const zeki = await zekiPromise
+  const chaos = await chaosPromise
+  const wallux = await walluxPromise
+  const iskes = await iskesPromise
+  const alchemy = await alchemyPromise
+  const iber0 = await iber0Promise
+  const zekiSmurf = await zekiSmurfPromise
+  const bandi = await bandiPromise
+  const weillySmurf = await weillySmurfPromise
+  const platanito = await platanitoPromise
+  const elpodologo = await elpodologoPromise
+  const brokerSnow = await brokerSnowPromise
 
   const profiles = [
     {

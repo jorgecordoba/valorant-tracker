@@ -59,7 +59,7 @@ async function getData(dateStart, dateEnd, func) {
 
 export async function getStaticProps() {
 
-  const dateStart = moment().tz('Europe/Madrid').startOf('day').add(-12, 'days')
+  const dateStart = moment().tz('Europe/Madrid').startOf('day').add(-14, 'days')
   const dateEnd = moment().tz('Europe/Madrid').startOf('day')
   const props = await getData(dateStart.format('YYYY-MM-DD'), dateEnd.format('YYYY-MM-DD'), getProfiles)
 
@@ -68,7 +68,7 @@ export async function getStaticProps() {
     // Next.js will attempt to re-generate the page:
     // - When a request comes in
     // - At most once every second
-    revalidate: 100, // In seconds
+    revalidate: 10, // In seconds
   }
 }
 
