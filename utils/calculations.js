@@ -34,10 +34,10 @@ const getMatchInfo = (match) => {
   if (!match.player) return {}
 
   const totalShots = match.dealtHeadshots + match.dealtBodyshots + match.dealtLegshots
-  const lastMatchHeadShot = ((match.dealtHeadshots / totalShots) *100).toFixed(2)
-  const lastMatchLegShot = ((match.dealtLegshots / totalShots) *100).toFixed(2)
+  const lastMatchHeadShot = ((match.dealtHeadshots / totalShots) *100).toFixed(1)
+  const lastMatchLegShot = ((match.dealtLegshots / totalShots) *100).toFixed(1)  
 
-  return {name: match.player, kda: `${match.kills} / ${match.deaths} / ${match.assists}`, placement: match.placement, firstBlood: match.firstBloods, firstDeath: match.deathsFirst, kdaRatio: match.kdRatio.toFixed(2), headshots: lastMatchHeadShot, legshots: lastMatchLegShot, result: `${match.roundsWon} - ${match.roundsLost}`, won: match.roundsWon > match.roundsLost, wonRatio: match.roundsWon / match.roundsLost, score: match.score, date: match.date}
+  return {name: match.player.substr(0, match.player.indexOf('#')), kda: `${match.kills}/${match.deaths}/${match.assists}`, placement: match.placement, firstBlood: match.firstBloods, firstDeath: match.deathsFirst, kdaRatio: match.kdRatio.toFixed(2), headshots: lastMatchHeadShot, legshots: lastMatchLegShot, result: `${match.roundsWon} - ${match.roundsLost}`, won: match.roundsWon > match.roundsLost, wonRatio: match.roundsWon / match.roundsLost, score: match.score, date: match.date}
 }
 
 const getLastMatch = (profile) => {

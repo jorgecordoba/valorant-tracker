@@ -35,11 +35,6 @@ export const LastMatchTable = (props) => {
               sortType: 'alphanumeric'
             },
             {
-              Header: 'Score',
-              accessor: 'score',
-              sortType: 'alphanumeric'
-            },
-            {
               Header: 'Result',
               accessor: 'kda',              
             },
@@ -57,12 +52,7 @@ export const LastMatchTable = (props) => {
               Header: 'LS',
               accessor: 'legshots',
               sortType: 'alphanumeric'
-            },
-            {
-              Header: 'Result',
-              accessor: 'result',
-              sortType: 'alphanumeric'
-            },
+            }
           ], []),
           data: React.useMemo(() => filteredData, filteredData),
           initialState: {
@@ -73,11 +63,11 @@ export const LastMatchTable = (props) => {
     return (      
     <div className={styles.top}>
       <div></div>
-      <div style={{textAlign:"center", marginBottom:"1rem"}}><h4><a href='#' onClick={() => setIndex(index < dates.length -1 ? index + 1 : index)}>&lt;&lt;</a> {index == 0 ? 'Last Match' : moment(dates[index]).format('YYYY-MM-DD HH:mm')} <a href='#' onClick={() => setIndex(index > 0 ? index -1: index)}>&gt;&gt;</a></h4></div>    
+      <div style={{textAlign:"center", marginBottom:"1rem"}}><h4><a href='#' onClick={() => setIndex(index < dates.length -1 ? index + 1 : index)}>&lt;&lt;</a> {index == 0 ? 'Last Match' : moment(dates[index]).format('YYYY-MM-DD HH:mm')} - Result: {props.data[dates[index]][0].result} <a href='#' onClick={() => setIndex(index > 0 ? index -1: index)}>&gt;&gt;</a></h4></div>    
     <table {...getTableProps()} style={{ border: 'solid 1px black', borderSpacing: 0, margin: 'auto' }}>
               <thead>
                 {headerGroups.map(headerGroup => (
-                  <tr {...headerGroup.getHeaderGroupProps()} style={{ border: 'solid 1px black' }}>
+                  <tr {...headerGroup.getHeaderGroupProps()} style={{ border: 'solid 1px black', textAlign: "center" }}>
                     {headerGroup.headers.map(column => (
                         <th {...column.getHeaderProps(column.getSortByToggleProps())} style={{ border: 'solid 1px black' }}>                          
                         {column.render('Header')}

@@ -24,7 +24,7 @@ export const StatsTable = (props) => {
               sortType: 'alphanumeric'
             },
             {
-              Header: 'Pos',
+              Header: '#',
               accessor: 'avgPosition',
               sortType: 'alphanumeric'
             },
@@ -35,7 +35,7 @@ export const StatsTable = (props) => {
             },
            ,
            {
-            Header: '# P',
+            Header: '#M',
             accessor: 'nmatches',
             sortType: 'alphanumeric'
            },
@@ -43,17 +43,7 @@ export const StatsTable = (props) => {
             Header: 'W/R',
             accessor: 'winRate',
             sortType: 'alphanumeric'
-           },
-           {
-            Header: 'W/R N',
-            accessor: 'winRateNight',
-            sortType: 'alphanumeric'
-           },
-           {
-            Header: 'W/R A',
-            accessor: 'winRateAfternoon',
-            sortType: 'alphanumeric'
-           },
+           }
           ], []),
           data: React.useMemo(() => filteredData, filteredData),
           initialState: {
