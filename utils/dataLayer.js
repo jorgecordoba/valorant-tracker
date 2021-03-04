@@ -1,5 +1,26 @@
 import axios from 'axios';
 import moment from 'moment-timezone';
+const winston = require('winston');
+
+const logger = winston.createLogger({
+  level: 'info',
+  format: winston.format.json(),
+  defaultMeta: { service: 'user-service' },
+  transports: [
+    //
+    // - Write all logs with level `error` and below to `error.log`
+    // - Write all logs with level `info` and below to `combined.log`
+    //
+    new winston.transports.File({ filename: 'error.log', level: 'error' }),
+    new winston.transports.File({ filename: 'combined.log' }),
+  ],
+});
+
+if (process.env.NODE_ENV !== 'production') {
+  logger.add(new winston.transports.Console({
+    format: winston.format.simple(),
+  }));
+}
 
 const brokerColors = { r: 59, g: 202, b: 227 }
 const chaosColors = { r: 59, g: 227, b: 104 }
@@ -76,17 +97,17 @@ async function transformData(data) {
 
 export async function getPlayerDataFromTrackerIndex(player, index,dateStart, dateEnd) {
   let path = `https://api.tracker.gg/api/v2/valorant/standard/matches/riot/${player}?type=competitive&next=${index}`
-  console.log(`Reading ${path}`)
+  logger.info(`Reading ${path}`)
   try {
     const res = await axios.get(path, {
       headers: {
-        'TRN-Api-Key': '203c55ac-fb74-4fde-a3ce-20cd70661d4a',
+        'TRN-Api-Key': 'edc7bac3-0251-4101-b94b-82df2b3fdb29',
         'Access-Control-Allow-Origin': '*',
         'Accept': 'application/json'
       },
 
     })
-    if (res.data.data) {
+    if (res.data.data) {      
       let data = await transformData(res.data.data)
       data = data.filter(p => moment(p.date).isSameOrAfter(dateStart, 'day'))
       data = data.filter(p => moment(p.date).isSameOrBefore(dateEnd, 'day'))  
@@ -94,7 +115,8 @@ export async function getPlayerDataFromTrackerIndex(player, index,dateStart, dat
     }
     return []
   }
-  catch {
+  catch (exception) {
+    logger.error(`Error retreiving data for ${player} - ${index}`, exception)
     return []
   } 
 }
@@ -126,7 +148,7 @@ export async function getPlayerDataFromTracker(player, dateStart, dateEnd) {
 
 export async function getPlayerDataFromCosmos(player, dateStart, dateEnd) {
   if (!cosmosResult || !cosmosStartDate || !cosmosEndDate || !moment(cosmosStartDate).isSame(dateStart) || !moment(cosmosEndDate).isSame(dateEnd))  {
-    console.log('Reading from cosmos')
+    logger.info('Reading from cosmos')
     let path = `https://valorant-avg-2.azurewebsites.net/api/GetCompetitiveMatches?code=JNwPc50O/xMe4f47C1w0etitWGeNzwJtskfCU3Tdh2IoURWGmow55Q==&from=${moment(dateStart).format('YYYY-MM-DD')}&to=${moment(dateEnd).format('YYYY-MM-DD')}`;
     const res = await axios.get(path, {
       headers: {
@@ -143,8 +165,8 @@ export async function getPlayerDataFromCosmos(player, dateStart, dateEnd) {
 }
 
 export async function getPlayerData(playerTracker, playerCosmos, dateStart, dateEnd) {
-  console.log(`Retreiving data for ${playerTracker}`)
-  let dataFromTracker = await getPlayerDataFromTracker(playerTracker, dateStart, dateEnd)
+  logger.info(`Retreiving data for ${playerTracker}`)
+  let dataFromTracker = await getPlayerDataFromTracker(playerTracker, dateStart, dateEnd)  
   return dataFromTracker
 }
 
@@ -179,7 +201,7 @@ export async function getProfiles(dateStart, dateEnd) {
   const weillySmurf = await weillySmurfPromise
   const platanito = await platanitoPromise
   const elpodologo = await elpodologoPromise
-  const brokerSnow = await brokerSnowPromise
+  const brokerSnow = await brokerSnowPromise  
 
   const profiles = [
     {
