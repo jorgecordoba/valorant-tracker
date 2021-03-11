@@ -194,6 +194,7 @@ export async function getProfiles(dateStart, dateEnd) {
   const chaos = await chaosPromise
   const wallux = await walluxPromise
   const iskes = await iskesPromise
+  await new Promise(r => setTimeout(r, 1000));
   const alchemy = await alchemyPromise
   const iber0 = await iber0Promise
   const zekiSmurf = await zekiSmurfPromise
