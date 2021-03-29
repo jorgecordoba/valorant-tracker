@@ -186,7 +186,7 @@ export async function getProfiles(dateStart, dateEnd) {
   const platanitoPromise = getPlayerData('platanito%23fruta', 'platanito#fruta', dateStart, dateEnd)
   const elpodologoPromise = getPlayerData('elpodologo%236629', 'elpodologo#6629', dateStart, dateEnd)
   const brokerSnowPromise = getPlayerData('BrokerSnow%234502', 'BrokerSnow#4502', dateStart, dateEnd)
-  const gusChan = getPlayerData('Guschan%23EUW', 'Guschan#EUW', dateStart, dateEnd)  
+  const gusChanPromise = getPlayerData('Guschan%23EUW', 'Guschan#EUW', dateStart, dateEnd)  
 
   const broker = await brokerPromise
   const neuras = await neurasPromise  
@@ -207,6 +207,7 @@ export async function getProfiles(dateStart, dateEnd) {
   const platanito = await platanitoPromise
   const elpodologo = await elpodologoPromise
   const brokerSnow = await brokerSnowPromise  
+  const gusChan = await gusChanPromise
 
   const profiles = [
     {
