@@ -186,20 +186,24 @@ export async function getProfiles(dateStart, dateEnd) {
   const platanitoPromise = getPlayerData('platanito%23fruta', 'platanito#fruta', dateStart, dateEnd)
   const elpodologoPromise = getPlayerData('elpodologo%236629', 'elpodologo#6629', dateStart, dateEnd)
   const brokerSnowPromise = getPlayerData('BrokerSnow%234502', 'BrokerSnow#4502', dateStart, dateEnd)
+  const gusChan = getPlayerData('Guschan%23EUW', 'Guschan#EUW', dateStart, dateEnd)  
 
   const broker = await brokerPromise
-  const neuras = await neurasPromise
+  const neuras = await neurasPromise  
   const ikeric = await ikericPromise
+  await new Promise(r => setTimeout(r, 700));
   const zeki = await zekiPromise
-  const chaos = await chaosPromise
+  const chaos = await chaosPromise  
   const wallux = await walluxPromise
-  const iskes = await iskesPromise
-  await new Promise(r => setTimeout(r, 1000));
+  await new Promise(r => setTimeout(r, 700));
+  const iskes = await iskesPromise  
   const alchemy = await alchemyPromise
   const iber0 = await iber0Promise
-  const zekiSmurf = await zekiSmurfPromise
+  await new Promise(r => setTimeout(r, 700));
+  const zekiSmurf = await zekiSmurfPromise  
   const bandi = await bandiPromise
   const weillySmurf = await weillySmurfPromise
+  await new Promise(r => setTimeout(r, 700));
   const platanito = await platanitoPromise
   const elpodologo = await elpodologoPromise
   const brokerSnow = await brokerSnowPromise  
@@ -353,6 +357,14 @@ export async function getProfiles(dateStart, dateEnd) {
       name: "BrokerSnow",
       rgb: randomRGB(),
       players: [brokerSnow],
+      hidden: true,
+      dateStart,
+      dateEnd
+    },
+    {
+      name: "Gus",
+      rgb: randomRGB(),
+      players: [gusChan],
       hidden: true,
       dateStart,
       dateEnd
